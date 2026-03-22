@@ -1,9 +1,16 @@
 """
 Proximal-Geometric Descent (PGD) Inverse Solver
-Decodes E₈ state back to N-dimensional actionable space
+Decodes E8 state back to N-dimensional actionable space
 """
+from __future__ import annotations
+
 import numpy as np
 from scipy.optimize import minimize
+from typing import List, Optional, Callable, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from gas.lattice import E8Lattice
+    from gas.energy_terms import EnergyTerm
 
 class ProximalGeometricDecoder:
     """8→N inverse mapping with geometric regularization"""

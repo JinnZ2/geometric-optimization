@@ -77,3 +77,57 @@ class GoldenEnergy(EnergyTerm):
         
         # Use median to be robust to outliers
         return np.median(deviation)
+
+
+class SquareEnergy(EnergyTerm):
+    """Square symmetry energy: deviation from 90-degree angles"""
+
+    def compute(self, x: np.ndarray, neighbors: np.ndarray) -> float:
+        norms = np.linalg.norm(neighbors, axis=1, keepdims=True)
+        unit_neighbors = neighbors / (norms + 1e-10)
+        dots = unit_neighbors @ unit_neighbors.T
+        # Ideal square angles: 0 (90 degrees) between distinct pairs
+        np.fill_diagonal(dots, 0.0)
+        return np.mean(dots ** 2)
+
+
+class HexagonalEnergy(EnergyTerm):
+    """Hexagonal symmetry energy: deviation from 60-degree packing"""
+
+    def compute(self, x: np.ndarray, neighbors: np.ndarray) -> float:
+        norms = np.linalg.norm(neighbors, axis=1, keepdims=True)
+        unit_neighbors = neighbors / (norms + 1e-10)
+        dots = unit_neighbors @ unit_neighbors.T
+        np.fill_diagonal(dots, 0.0)
+        # Hexagonal packing angle cos(60°) = 0.5
+        return np.mean((np.abs(dots) - 0.5) ** 2)
+
+
+class DodecahedralEnergy(EnergyTerm):
+    """Dodecahedral symmetry energy: deviation from icosahedral angles"""
+
+    def compute(self, x: np.ndarray, neighbors: np.ndarray) -> float:
+        phi = (1 + np.sqrt(5)) / 2
+        # Icosahedral angle cosine: 1/sqrt(5) ≈ 1/φ²
+        target = 1.0 / (phi ** 2)
+        norms = np.linalg.norm(neighbors, axis=1, keepdims=True)
+        unit_neighbors = neighbors / (norms + 1e-10)
+        dots = unit_neighbors @ unit_neighbors.T
+        np.fill_diagonal(dots, 0.0)
+        return np.mean((np.abs(dots) - target) ** 2)
+
+
+def create_energy_suite(include_all: bool = False):
+    """Create the standard set of geometric energy terms.
+
+    Args:
+        include_all: If True, include square, hexagonal, and dodecahedral
+            terms in addition to the core three.
+
+    Returns:
+        List of EnergyTerm instances.
+    """
+    terms = [OctahedralEnergy(), TetrahedralEnergy(), GoldenEnergy()]
+    if include_all:
+        terms.extend([SquareEnergy(), HexagonalEnergy(), DodecahedralEnergy()])
+    return terms

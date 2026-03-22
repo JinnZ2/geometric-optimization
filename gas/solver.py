@@ -1,9 +1,15 @@
 """
 Geometric Annealing Solver (GAS) - Core Algorithm
 """
+from __future__ import annotations
+
 import numpy as np
 from dataclasses import dataclass, field
-from typing import List, Optional, Callable
+from typing import List, Optional, Callable, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .lattice import E8Lattice
+    from .energy_terms import EnergyTerm
 
 @dataclass
 class GASParams:
