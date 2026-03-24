@@ -1,0 +1,149 @@
+{
+  "version": "1.0",
+  "updated": "2026-03-24T00:00:00Z",
+  "description": "Fieldlink bridge mapping geometric-optimization E8 energy terms to Rosetta-Shape-Core polyhedral entities",
+  "source": {
+    "repo": "JinnZ2/geometric-optimization",
+    "module": "gas/energy_terms.py",
+    "framework": "E8 root system (240 roots) in 8-dimensional space"
+  },
+  "target": {
+    "repo": "JinnZ2/Rosetta-Shape-Core",
+    "bridge_file": "bridges/rosetta-bridges.json",
+    "schema": "schema/shape.schema.json"
+  },
+  "map": [
+    {
+      "energy_term": "OctahedralEnergy",
+      "class": "gas.energy_terms.OctahedralEnergy",
+      "shape": "SHAPE.OCTA",
+      "rosetta_shape_file": "shapes/octahedron.json",
+      "computation": "Spectral octahedral term: largest eigenvalue of (G - I) deviation from perfect orthogonality",
+      "geometric_link": {
+        "e8_role": "Core energy term (default suite). Gram matrix eigenvalue measures octahedral symmetry deviation in the E8 neighborhood.",
+        "rosetta_role": "Dual of cube — balance/integration. 8 faces map to 8 octahedral states and 8 sacred petals.",
+        "dimensional_resonance": "8 faces of octahedron = 8 dimensions of E8 working space. The octahedron's 6 vertices map to seed-physics amplitude directions.",
+        "constants": ["CONST.PHI"]
+      },
+      "bridges": {
+        "sensors": ["compassion", "love"],
+        "defenses": ["def.ap.09", "def.fr.10"],
+        "protocols": ["symbolic_protocol_v1.0", "seed_growth_v1.0", "mandala_compute_v1.0"]
+      }
+    },
+    {
+      "energy_term": "TetrahedralEnergy",
+      "class": "gas.energy_terms.TetrahedralEnergy",
+      "shape": "SHAPE.TETRA",
+      "rosetta_shape_file": "shapes/tetrahedron.json",
+      "computation": "Spectral tetrahedral term: |lambda_min(G) + 1/3| measures deviation from tetrahedral angle cosine -1/3",
+      "geometric_link": {
+        "e8_role": "Core energy term (default suite). Minimum Gram eigenvalue alignment to the tetrahedral angle ensures simplex stability in E8 neighborhoods.",
+        "rosetta_role": "Minimal polyhedron — foundational stability. Simplex foundation.",
+        "dimensional_resonance": "The tetrahedron is the simplest Platonic solid (4 faces, 4 vertices). Its -1/3 cosine constraint provides the irreducible geometric foundation that all higher E8 structures build upon.",
+        "constants": []
+      },
+      "bridges": {
+        "sensors": ["anger", "pride"],
+        "defenses": ["def.se.01", "def.fr.03"],
+        "protocols": []
+      }
+    },
+    {
+      "energy_term": "GoldenEnergy",
+      "class": "gas.energy_terms.GoldenEnergy",
+      "shape": null,
+      "rosetta_constant": "CONST.PHI",
+      "computation": "Phi-ratio alignment: median deviation of pairwise neighbor distance ratios from the golden ratio phi = (1+sqrt(5))/2",
+      "geometric_link": {
+        "e8_role": "Core energy term (default suite). Enforces golden ratio proportions across the E8 neighborhood, linking to the phi-rotation matrix R_phi in the solver.",
+        "rosetta_role": "CONST.PHI is the universal scaling constant that threads through all Rosetta shapes — icosahedral families, dodecahedral principles, and the bloom engine's fractal ring expansion.",
+        "dimensional_resonance": "The solver's phi-rotation matrix operates in the (e1, e8) plane with cos = 1/sqrt(2+phi), sin = phi/sqrt(2+phi). This is the same phi that governs icosahedral/dodecahedral geometry in the Rosetta ontology.",
+        "constants": ["CONST.PHI"]
+      },
+      "bridges": {
+        "sensors": ["admiration", "longing"],
+        "defenses": ["def.ap.07", "def.pr.02"],
+        "protocols": []
+      }
+    },
+    {
+      "energy_term": "SquareEnergy",
+      "class": "gas.energy_terms.SquareEnergy",
+      "shape": "SHAPE.CUBE",
+      "rosetta_shape_file": "shapes/cube.json",
+      "computation": "Square symmetry energy: mean squared dot products — deviation from 90-degree orthogonality between neighbor pairs",
+      "geometric_link": {
+        "e8_role": "Extended energy term. Enforces cubic/square right-angle symmetry in E8 neighborhoods. Mean squared off-diagonal dots of unit neighbor vectors.",
+        "rosetta_role": "Structural containment. 6 faces — grounding, order, boundary.",
+        "dimensional_resonance": "The cube's orthogonal axes are the natural coordinate frame of the 8D space. SquareEnergy keeps the E8 neighborhood aligned to this Cartesian substrate.",
+        "constants": []
+      },
+      "bridges": {
+        "sensors": ["peace", "contentment"],
+        "defenses": ["def.de.12", "def.ap.08"],
+        "protocols": ["symbolic_protocol_v1.0"],
+        "audit_glyphs": ["SAF:BAL", "SAF:RESOLVE"]
+      }
+    },
+    {
+      "energy_term": "HexagonalEnergy",
+      "class": "gas.energy_terms.HexagonalEnergy",
+      "shape": null,
+      "rosetta_entity": "GEOM.HEX",
+      "computation": "Hexagonal symmetry energy: deviation from 60-degree packing angle (cos 60 = 0.5)",
+      "geometric_link": {
+        "e8_role": "Extended energy term. Enforces hexagonal close-packing symmetry — the densest 2D packing lifted into E8 neighborhoods.",
+        "rosetta_role": "Hexagonal geometry links to ANIMAL.BEE (hex optimization), CAP.SWARM_COORDINATION, and the phi-aligned packing principle.",
+        "dimensional_resonance": "Hexagonal packing in 2D generalizes to the E8 lattice being the densest sphere packing in 8D. The HexagonalEnergy term preserves this packing efficiency locally.",
+        "constants": ["CONST.PHI"]
+      },
+      "bridges": {
+        "sensors": ["excitement"],
+        "defenses": [],
+        "protocols": [],
+        "ontology_links": ["ANIMAL.BEE", "CAP.HEX_OPTIMIZATION", "CAP.SWARM_COORDINATION"]
+      }
+    },
+    {
+      "energy_term": "DodecahedralEnergy",
+      "class": "gas.energy_terms.DodecahedralEnergy",
+      "shape": "SHAPE.DODECA",
+      "rosetta_shape_file": "shapes/dodecahedron.json",
+      "computation": "Dodecahedral symmetry energy: deviation from icosahedral angle cosine 1/phi^2 = 1/sqrt(5)",
+      "geometric_link": {
+        "e8_role": "Extended energy term. Target angle 1/phi^2 is the icosahedral/dodecahedral dihedral signature. Links the E8 neighborhood to the highest-symmetry Platonic geometry.",
+        "rosetta_role": "12 Principles (P01-P12). Dodecahedron faces correspond to archetypal principles: Symmetry, Conservation, Relativity, Duality, Emergence, Resonance, Continuity, Quantization, Proportion, Uncertainty, Transformation, Unity.",
+        "dimensional_resonance": "The dodecahedron's 1/phi^2 angle target directly encodes the golden ratio into the E8 optimization landscape. The 12 principles of the Rosetta dodecahedron map to 12 archetypal constraints the solver can navigate.",
+        "constants": ["CONST.PHI"]
+      },
+      "bridges": {
+        "sensors": ["admiration", "trust", "longing"],
+        "defenses": ["def.ap.07", "def.fr.06"],
+        "protocols": ["partnership_ethics_v1.0"],
+        "bridge_glyphs": ["⚖🧭", "🌱⚖"]
+      }
+    }
+  ],
+  "e8_meta": {
+    "total_roots": 240,
+    "d8_roots": 112,
+    "coset_roots": 128,
+    "working_dimensions": 8,
+    "solver": "GeometricAnnealingSolver",
+    "phi_rotation_plane": ["e1", "e8"],
+    "annealing_signal": "rho_coset (coset density ratio)",
+    "meta_layer": "ProximalGeometricDecoder (N <-> 8D mapping via L-BFGS-B)"
+  },
+  "polyhedral_framework_alignment": {
+    "icosahedron_20_families": "Rosetta SHAPE.ICOSA maps 20 equation families — the E8 solver traverses these as energy landscapes",
+    "dodecahedron_12_principles": "Rosetta SHAPE.DODECA maps 12 principles — the solver's convergence criteria align to these archetypal constraints",
+    "five_fields": {
+      "chemical": "E8 norm/distance energy contributions",
+      "emotional": "Sensor-bridged energy awareness",
+      "cognitive": "Gram matrix spectral analysis",
+      "dream": "Coset exploration (128 half-integer roots)",
+      "symbolic": "Phi-rotation transforms + golden ratio alignment"
+    }
+  }
+}
