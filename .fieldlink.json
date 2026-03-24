@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "repo": "JinnZ2/geometric-optimization",
+  "description": "Fieldlink configuration — pulls symbolic ontology data from Rosetta-Shape-Core ecosystem",
+  "sources": [
+    {
+      "name": "Rosetta-Shape-Core",
+      "repo": "https://github.com/JinnZ2/Rosetta-Shape-Core",
+      "paths": [
+        "shapes/*.json",
+        "bridges/rosetta-bridges.json",
+        "ontology/_vocab.json",
+        "ontology/capabilities.json",
+        "schema/shape.schema.json"
+      ],
+      "stage_to": ".fieldlink/merge_stage/rosetta"
+    }
+  ],
+  "local_bridge": "bridges/rosetta-fieldlink.json",
+  "merge_strategy": "copy",
+  "pull_script": "fieldlink-pull.sh"
+}
