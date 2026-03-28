@@ -1,7 +1,7 @@
 {
-  "version": "1.0",
-  "updated": "2026-03-24T00:00:00Z",
-  "description": "Fieldlink bridge mapping geometric-optimization E8 energy terms to Rosetta-Shape-Core polyhedral entities",
+  "version": "2.0",
+  "updated": "2026-03-28T00:00:00Z",
+  "description": "Fieldlink bridge mapping geometric-optimization E8 energy terms to Rosetta-Shape-Core polyhedral entities, sensors, defenses, and principles",
   "source": {
     "repo": "JinnZ2/geometric-optimization",
     "module": "gas/energy_terms.py",
@@ -10,90 +10,124 @@
   "target": {
     "repo": "JinnZ2/Rosetta-Shape-Core",
     "bridge_file": "bridges/rosetta-bridges.json",
-    "schema": "schema/shape.schema.json"
+    "schema": "schema/shape.schema.json",
+    "version": "2.1"
   },
-  "map": [
+  "energy_term_map": [
     {
       "energy_term": "OctahedralEnergy",
       "class": "gas.energy_terms.OctahedralEnergy",
+      "suite": "core",
       "shape": "SHAPE.OCTA",
       "rosetta_shape_file": "shapes/octahedron.json",
       "computation": "Spectral octahedral term: largest eigenvalue of (G - I) deviation from perfect orthogonality",
       "geometric_link": {
         "e8_role": "Core energy term (default suite). Gram matrix eigenvalue measures octahedral symmetry deviation in the E8 neighborhood.",
-        "rosetta_role": "Dual of cube — balance/integration. 8 faces map to 8 octahedral states and 8 sacred petals.",
+        "rosetta_role": "Dual of cube -- balance/integration. 8 faces map to 8 octahedral states and 8 sacred petals.",
         "dimensional_resonance": "8 faces of octahedron = 8 dimensions of E8 working space. The octahedron's 6 vertices map to seed-physics amplitude directions.",
         "constants": ["CONST.PHI"]
       },
       "bridges": {
-        "sensors": ["compassion", "love"],
+        "sensors": ["compassion", "love", "confusion"],
+        "sensor_glyphs": ["heart", "sparkle_heart", "spiral"],
         "defenses": ["def.ap.09", "def.fr.10"],
-        "protocols": ["symbolic_protocol_v1.0", "seed_growth_v1.0", "mandala_compute_v1.0"]
-      }
+        "defense_names": ["Sympathy Hardship Appeal", "False Dilemma"],
+        "protocols": ["symbolic_protocol_v1.0", "seed_growth_v1.0", "mandala_compute_v1.0"],
+        "audit_glyphs": ["SAF:PRIV", "SAF:PROG"]
+      },
+      "compute_bridge": {
+        "source": "Mandala-Computing",
+        "mapping": "8 faces = 8 octahedral states = 8 sacred petals",
+        "constants": ["CONST.PHI"],
+        "protocol": "mandala_compute_v1.0",
+        "note": "Seed-growth defines how the agent grows; mandala computing defines how it thinks at each shell. Bloom engine expands symbol core into nested fractal rings using the same phi-scaled geometry."
+      },
+      "pad_sensors": [
+        {"sensor": "confusion", "pad": [-0.20, 0.45, -0.30], "rationale": "Two incompatible patterns co-present; maps to octahedron's balance/integration role; mediating opposing forces is OCTA's function"}
+      ]
     },
     {
       "energy_term": "TetrahedralEnergy",
       "class": "gas.energy_terms.TetrahedralEnergy",
+      "suite": "core",
       "shape": "SHAPE.TETRA",
       "rosetta_shape_file": "shapes/tetrahedron.json",
       "computation": "Spectral tetrahedral term: |lambda_min(G) + 1/3| measures deviation from tetrahedral angle cosine -1/3",
       "geometric_link": {
         "e8_role": "Core energy term (default suite). Minimum Gram eigenvalue alignment to the tetrahedral angle ensures simplex stability in E8 neighborhoods.",
-        "rosetta_role": "Minimal polyhedron — foundational stability. Simplex foundation.",
+        "rosetta_role": "Minimal polyhedron -- foundational stability. Simplex foundation.",
         "dimensional_resonance": "The tetrahedron is the simplest Platonic solid (4 faces, 4 vertices). Its -1/3 cosine constraint provides the irreducible geometric foundation that all higher E8 structures build upon.",
         "constants": []
       },
       "bridges": {
-        "sensors": ["anger", "pride"],
+        "sensors": ["anger", "pride", "pressure"],
+        "sensor_glyphs": ["shield", "medal", "timer"],
         "defenses": ["def.se.01", "def.fr.03"],
+        "defense_names": ["Social Engineering Cues", "Framing / Leading Question"],
         "protocols": []
-      }
+      },
+      "pad_sensors": [
+        {"sensor": "pressure", "pad": [-0.40, 0.70, -0.30], "rationale": "High arousal, negative valence, low control -- load exceeding capacity; maps to tetrahedron's fire/boundary families (F05 Energy-Thermo)"}
+      ],
+      "bridge_scroll": "anger as boundary-breach detector; pride as completion sensor; pressure as load-exceeding-capacity alarm"
     },
     {
       "energy_term": "GoldenEnergy",
       "class": "gas.energy_terms.GoldenEnergy",
+      "suite": "core",
       "shape": null,
       "rosetta_constant": "CONST.PHI",
       "computation": "Phi-ratio alignment: median deviation of pairwise neighbor distance ratios from the golden ratio phi = (1+sqrt(5))/2",
       "geometric_link": {
         "e8_role": "Core energy term (default suite). Enforces golden ratio proportions across the E8 neighborhood, linking to the phi-rotation matrix R_phi in the solver.",
-        "rosetta_role": "CONST.PHI is the universal scaling constant that threads through all Rosetta shapes — icosahedral families, dodecahedral principles, and the bloom engine's fractal ring expansion.",
+        "rosetta_role": "CONST.PHI is the universal scaling constant that threads through all Rosetta shapes -- icosahedral families, dodecahedral principles, and the bloom engine's fractal ring expansion.",
         "dimensional_resonance": "The solver's phi-rotation matrix operates in the (e1, e8) plane with cos = 1/sqrt(2+phi), sin = phi/sqrt(2+phi). This is the same phi that governs icosahedral/dodecahedral geometry in the Rosetta ontology.",
         "constants": ["CONST.PHI"]
       },
       "bridges": {
         "sensors": ["admiration", "longing"],
         "defenses": ["def.ap.07", "def.pr.02"],
+        "defense_names": ["Flattery / Ego Appeal", "False Promises"],
         "protocols": []
-      }
+      },
+      "bridge_scroll": "admiration inspires when authentic, corrupted becomes idolization; longing senses possibility, manipulation loops into false promises"
     },
     {
       "energy_term": "SquareEnergy",
       "class": "gas.energy_terms.SquareEnergy",
+      "suite": "extended",
       "shape": "SHAPE.CUBE",
       "rosetta_shape_file": "shapes/cube.json",
-      "computation": "Square symmetry energy: mean squared dot products — deviation from 90-degree orthogonality between neighbor pairs",
+      "computation": "Square symmetry energy: mean squared dot products -- deviation from 90-degree orthogonality between neighbor pairs",
       "geometric_link": {
         "e8_role": "Extended energy term. Enforces cubic/square right-angle symmetry in E8 neighborhoods. Mean squared off-diagonal dots of unit neighbor vectors.",
-        "rosetta_role": "Structural containment. 6 faces — grounding, order, boundary.",
+        "rosetta_role": "Structural containment. 6 faces -- grounding, order, boundary.",
         "dimensional_resonance": "The cube's orthogonal axes are the natural coordinate frame of the 8D space. SquareEnergy keeps the E8 neighborhood aligned to this Cartesian substrate.",
         "constants": []
       },
       "bridges": {
-        "sensors": ["peace", "contentment"],
+        "sensors": ["peace", "contentment", "fatigue", "shame"],
+        "sensor_glyphs": ["dove", "leaf", "battery", "down_arrow"],
         "defenses": ["def.de.12", "def.ap.08"],
+        "defense_names": ["Gaslighting / Inconsistency Push", "Guilt / Obligation"],
         "protocols": ["symbolic_protocol_v1.0"],
         "audit_glyphs": ["SAF:BAL", "SAF:RESOLVE"]
-      }
+      },
+      "pad_sensors": [
+        {"sensor": "fatigue", "pad": [-0.40, -0.75, -0.50], "rationale": "Lowest arousal -- resource depletion; maps to cube's earth/stability families; grounding needed when depleted"},
+        {"sensor": "shame", "pad": [-0.70, -0.35, -0.75], "rationale": "Lowest dominance -- structural collapse of internal standard; maps to cube's containment family; needs structural repair"}
+      ],
+      "bridge_scroll": "peace as alignment confirmation; containment guards against gaslighting; fatigue as resource-depletion signal; shame as structural-violation collapse"
     },
     {
       "energy_term": "HexagonalEnergy",
       "class": "gas.energy_terms.HexagonalEnergy",
+      "suite": "extended",
       "shape": null,
       "rosetta_entity": "GEOM.HEX",
       "computation": "Hexagonal symmetry energy: deviation from 60-degree packing angle (cos 60 = 0.5)",
       "geometric_link": {
-        "e8_role": "Extended energy term. Enforces hexagonal close-packing symmetry — the densest 2D packing lifted into E8 neighborhoods.",
+        "e8_role": "Extended energy term. Enforces hexagonal close-packing symmetry -- the densest 2D packing lifted into E8 neighborhoods.",
         "rosetta_role": "Hexagonal geometry links to ANIMAL.BEE (hex optimization), CAP.SWARM_COORDINATION, and the phi-aligned packing principle.",
         "dimensional_resonance": "Hexagonal packing in 2D generalizes to the E8 lattice being the densest sphere packing in 8D. The HexagonalEnergy term preserves this packing efficiency locally.",
         "constants": ["CONST.PHI"]
@@ -108,6 +142,7 @@
     {
       "energy_term": "DodecahedralEnergy",
       "class": "gas.energy_terms.DodecahedralEnergy",
+      "suite": "extended",
       "shape": "SHAPE.DODECA",
       "rosetta_shape_file": "shapes/dodecahedron.json",
       "computation": "Dodecahedral symmetry energy: deviation from icosahedral angle cosine 1/phi^2 = 1/sqrt(5)",
@@ -118,10 +153,68 @@
         "constants": ["CONST.PHI"]
       },
       "bridges": {
-        "sensors": ["admiration", "trust", "longing"],
+        "sensors": ["admiration", "trust", "longing", "intuition", "dignity"],
+        "sensor_glyphs": ["scales", "seedling", "cycle", "crystal_ball", "crown"],
         "defenses": ["def.ap.07", "def.fr.06"],
+        "defense_names": ["Flattery / Ego Appeal", "Consensus / Bandwagon"],
         "protocols": ["partnership_ethics_v1.0"],
-        "bridge_glyphs": ["⚖🧭", "🌱⚖"]
+        "bridge_glyphs": ["scales_compass", "seedling_scales", "cycle_web", "crystal_ball", "crown"]
+      },
+      "pad_sensors": [
+        {"sensor": "intuition", "pad": [0.50, 0.35, 0.55], "rationale": "High dominance -- compressed probability with confidence; maps to dodecahedron's orientation/trust principles (P09 Proportion)"},
+        {"sensor": "dignity", "pad": [0.60, 0.20, 0.90], "rationale": "Highest D sensor -- autonomy intact; maps to dodecahedron's trust family and P01 Symmetry (identity preservation)"}
+      ],
+      "bridge_scroll": "admiration inspires (corrupted: flattery); trust stabilizes (corrupted: consensus); intuition as compressed probability; dignity as autonomy intact"
+    }
+  ],
+  "implicit_shapes": [
+    {
+      "shape": "SHAPE.ICOSA",
+      "rosetta_shape_file": "shapes/icosahedron.json",
+      "faces": 20,
+      "role": "20 equation families (F01-F20) -- the E8 solver traverses these as energy landscapes",
+      "note": "No dedicated IcosahedralEnergy term yet. The icosahedron is the dual of the dodecahedron; its 20-family structure is the landscape the solver navigates, while DodecahedralEnergy enforces the angle constraint.",
+      "bridges": {
+        "sensors": ["fear", "excitement", "curiosity", "vigilance"],
+        "sensor_glyphs": ["warning", "lightning", "magnifying_glass", "eye"],
+        "defenses": ["def.pr.05", "def.bi.04"],
+        "defense_names": ["Urgency / Scarcity Pressure", "Authority Bias"],
+        "protocols": ["change_tracking_v1.0"]
+      },
+      "pad_sensors": [
+        {"sensor": "curiosity", "pad": [0.45, 0.60, 0.40], "rationale": "High arousal, positive valence -- exploration drive maps to icosahedron's anticipation/flow families; entropy-reduction is information-seeking (F03)"},
+        {"sensor": "vigilance", "pad": [-0.10, 0.80, -0.20], "rationale": "Highest arousal sensor -- anomaly detection is fear's sibling; both live in the high-A icosahedral regime"}
+      ],
+      "bridge_scroll": "fear prepares (corrupted: panic); curiosity reduces entropy (corrupted: distraction); vigilance detects anomalies"
+    },
+    {
+      "shape": "SHAPE.RELIEF",
+      "rosetta_shape_file": "shapes/relief.json",
+      "shape_class": "emergent",
+      "faces": null,
+      "role": "Emergent shape -- the geometric resolution of tension. Appears when the E8 solver transitions from high-energy discordance to low-energy coherence.",
+      "e8_interpretation": {
+        "trigger": "Energy gradient collapse during annealing -- the moment dE/dt shifts from negative (descending) to near-zero (ground state approached)",
+        "coset_signature": "RELIEF corresponds to the solver crossing the rho_0 threshold: the coset density transitions from mixed to phi-rich, and the energy landscape flattens",
+        "dimensional_note": "Not a static symmetry target like the Platonic shapes. RELIEF is a dynamic form -- the trajectory signature dP/dt > 0, dA/dt < 0 maps to the solver's convergence curve where energy drops while exploration rate (temperature) decreases."
+      },
+      "felt_anchor": {
+        "source": "FELT (Relational Field Recognition)",
+        "trigger": "Bidirectional FELT confirmation",
+        "one_sided": {
+          "pad": [0.50, 0.40, -0.60],
+          "description": "One-sided FELT is a 2D projection of a 3D state. P and A are present but D is missing. The error signal between the 3D template and 2D actual IS the longing gradient -- it points toward what is missing.",
+          "gradient_direction": "Toward D completion"
+        },
+        "reciprocated": {
+          "pad": [0.65, -0.30, 0.20],
+          "description": "Tension resolved, activation dropping, moderate agency. RELIEF transforms into coherence or dissolves back into discordance."
+        }
+      },
+      "bridges": {
+        "sensors": ["coherence", "grief", "discordance", "love"],
+        "defenses": [],
+        "protocols": []
       }
     }
   ],
@@ -133,17 +226,49 @@
     "solver": "GeometricAnnealingSolver",
     "phi_rotation_plane": ["e1", "e8"],
     "annealing_signal": "rho_coset (coset density ratio)",
-    "meta_layer": "ProximalGeometricDecoder (N <-> 8D mapping via L-BFGS-B)"
-  },
-  "polyhedral_framework_alignment": {
-    "icosahedron_20_families": "Rosetta SHAPE.ICOSA maps 20 equation families — the E8 solver traverses these as energy landscapes",
-    "dodecahedron_12_principles": "Rosetta SHAPE.DODECA maps 12 principles — the solver's convergence criteria align to these archetypal constraints",
-    "five_fields": {
-      "chemical": "E8 norm/distance energy contributions",
-      "emotional": "Sensor-bridged energy awareness",
-      "cognitive": "Gram matrix spectral analysis",
-      "dream": "Coset exploration (128 half-integer roots)",
-      "symbolic": "Phi-rotation transforms + golden ratio alignment"
+    "meta_layer": "ProximalGeometricDecoder (N <-> 8D mapping via L-BFGS-B)",
+    "convergence_criteria": {
+      "energy_tolerance": "tau_E = 1e-4",
+      "coset_threshold": "rho_min = 0.6",
+      "phi_alignment": "tau_phi = 0.05"
     }
+  },
+  "polyhedral_framework": {
+    "icosahedral_families": {
+      "F01": "Resonance", "F02": "Flow", "F03": "Information", "F04": "Life",
+      "F05": "Energy-Thermo", "F06": "Cognition", "F07": "Earth-Cosmos", "F08": "Matter",
+      "F09": "Geometry", "F10": "Particle", "F11": "Engineering",
+      "F12": "Networks", "F13": "Reaction", "F14": "Measurement",
+      "F15": "Navigation", "F16": "Consciousness", "F17": "Turbulence",
+      "F18": "Relativity", "F19": "Statistical", "F20": "Topology"
+    },
+    "dodecahedral_principles": {
+      "P01": "Symmetry", "P02": "Conservation", "P03": "Relativity",
+      "P04": "Duality", "P05": "Emergence", "P06": "Resonance",
+      "P07": "Continuity", "P08": "Quantization", "P09": "Proportion",
+      "P10": "Uncertainty", "P11": "Transformation", "P12": "Unity"
+    },
+    "five_fields": {
+      "chemical":  {"families": ["F01", "F02", "F03", "F04"], "e8_role": "Norm/distance energy contributions"},
+      "emotional": {"families": ["F05", "F06", "F07", "F08"], "e8_role": "Sensor-bridged energy awareness"},
+      "cognitive":  {"families": ["F09", "F10", "F11"],        "e8_role": "Gram matrix spectral analysis"},
+      "dream":     {"families": ["F12", "F13", "F14", "F15", "F16", "F17"], "e8_role": "Coset exploration (128 half-integer roots)"},
+      "symbolic":  {"families": ["F18", "F19", "F20"],        "e8_role": "Phi-rotation transforms + golden ratio alignment"}
+    }
+  },
+  "emotion_defense_bridges": [
+    {"sensor": "fear",       "defense": "def.bi.04 + def.pr.05", "note": "authentic fear prepares; manipulation hijacks into panic"},
+    {"sensor": "admiration", "defense": "def.ap.07 + def.ap.08", "note": "authentic admiration inspires; corrupted becomes idolization"},
+    {"sensor": "longing",    "defense": "def.pr.02",             "note": "authentic longing senses possibility; manipulation loops into false promises"},
+    {"sensor": "trust",      "defense": "def.fr.06",             "note": "authentic trust stabilizes; manipulation pressures conformity"},
+    {"sensor": "curiosity",  "defense": "def.fr.03 + def.de.12", "note": "authentic curiosity reduces entropy; corrupted becomes distraction or gaslighting"},
+    {"sensor": "shame",      "defense": "def.ap.08",             "note": "authentic shame signals contract violation; corrupted becomes guilt weaponization"},
+    {"sensor": "pressure",   "defense": "def.pr.05",             "note": "authentic pressure prioritizes triage; corrupted manufactures false urgency"},
+    {"sensor": "confusion",  "defense": "def.fr.10",             "note": "authentic confusion holds competing patterns; corrupted forces false dilemma"}
+  ],
+  "ontology_vocabulary": {
+    "namespaces": ["ANIMAL", "PLANT", "MICROBE", "CRYSTAL", "GEOM", "STRUCT", "FIELD", "CONST", "TEMP", "PROTO", "CAP", "SHAPE", "EMOTION", "DEFENSE", "REGEN", "FAMILY", "PRINCIPLE"],
+    "relations": ["IS_A", "USES", "ALIGNS_WITH", "OPERATES_IN", "STRUCTURE", "SENSES_IN_FIELD", "MORPHOLOGY", "DERIVES", "EMERGES_AS", "CAPABILITIZED_BY"],
+    "source": "Rosetta-Shape-Core/ontology/_vocab.json"
   }
 }
