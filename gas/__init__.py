@@ -14,6 +14,7 @@ from .energy_terms import (
     SquareEnergy,
     HexagonalEnergy,
     DodecahedralEnergy,
+    IcosahedralEnergy,
     create_energy_suite,
 )
 from .solver import GeometricAnnealingSolver, GASParams, GASState
@@ -28,6 +29,7 @@ __all__ = [
     "SquareEnergy",
     "HexagonalEnergy",
     "DodecahedralEnergy",
+    "IcosahedralEnergy",
     "create_energy_suite",
     "GeometricAnnealingSolver",
     "GASParams",
