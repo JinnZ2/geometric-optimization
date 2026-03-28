@@ -14,22 +14,31 @@ from .solver import GeometricAnnealingSolver, GASParams
 def main(argv=None):
     parser = argparse.ArgumentParser(
         prog="gopt-optimize",
-        description="Geometric Annealing Solver (GAS) — optimize on the E8 lattice",
+        description=(
+            "Geometric Annealing Solver (GAS) — "
+            "optimize on the E8 lattice"
+        ),
     )
     parser.add_argument(
-        "--max-iters", type=int, default=1000, help="Maximum iterations (default: 1000)"
+        "--max-iters", type=int, default=1000,
+        help="Maximum iterations (default: 1000)",
     )
     parser.add_argument(
-        "--seed", type=int, default=None, help="Random seed for reproducibility"
+        "--seed", type=int, default=None,
+        help="Random seed for reproducibility",
     )
     parser.add_argument(
-        "--rho-min", type=float, default=0.6, help="Minimum coset density target (default: 0.6)"
+        "--rho-min", type=float, default=0.6,
+        help="Minimum coset density target (default: 0.6)",
     )
     parser.add_argument(
-        "--all-terms", action="store_true", help="Include all energy terms (square, hexagonal, dodecahedral)"
+        "--all-terms", action="store_true",
+        help="Include all energy terms (square, hexagonal, "
+             "dodecahedral, icosahedral)",
     )
     parser.add_argument(
-        "--quiet", action="store_true", help="Suppress progress output"
+        "--quiet", action="store_true",
+        help="Suppress progress output",
     )
     args = parser.parse_args(argv)
 
@@ -41,12 +50,15 @@ def main(argv=None):
     params = GASParams(max_iters=args.max_iters, rho_min=args.rho_min)
     solver = GeometricAnnealingSolver(lattice, energy_terms, params)
 
-    x_init = create_test_point(args.seed if args.seed is not None else 42)
+    x_init = create_test_point(
+        args.seed if args.seed is not None else 42
+    )
 
     def callback(state):
         if not args.quiet and state.iteration % 100 == 0:
             print(
-                f"  iter {state.iteration:4d}  E={state.energy:.6f}  "
+                f"  iter {state.iteration:4d}  "
+                f"E={state.energy:.6f}  "
                 f"rho={state.rho_coset:.3f}"
             )
 

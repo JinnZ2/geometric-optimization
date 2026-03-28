@@ -11,6 +11,7 @@ from gas.energy_terms import (
     SquareEnergy,
     HexagonalEnergy,
     DodecahedralEnergy,
+    IcosahedralEnergy,
     create_energy_suite,
 )
 
@@ -42,6 +43,7 @@ class TestEnergyTerms:
             SquareEnergy,
             HexagonalEnergy,
             DodecahedralEnergy,
+            IcosahedralEnergy,
         ],
     )
     def test_compute_returns_scalar(self, cls, point, neighbors):
@@ -58,6 +60,7 @@ class TestEnergyTerms:
             SquareEnergy,
             HexagonalEnergy,
             DodecahedralEnergy,
+            IcosahedralEnergy,
         ],
     )
     def test_compute_non_negative(self, cls, point, neighbors):
@@ -92,6 +95,6 @@ class TestCreateEnergySuite:
         assert isinstance(terms[1], TetrahedralEnergy)
         assert isinstance(terms[2], GoldenEnergy)
 
-    def test_include_all_six_terms(self):
+    def test_include_all_terms(self):
         terms = create_energy_suite(include_all=True)
-        assert len(terms) == 6
+        assert len(terms) == 7

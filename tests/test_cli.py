@@ -7,7 +7,7 @@ from gas.cli import main
 
 class TestCLI:
     def test_runs_with_few_iters(self, capsys):
-        code = main(["--max-iters", "10", "--seed", "42", "--quiet"])
+        main(["--max-iters", "10", "--seed", "42", "--quiet"])
         captured = capsys.readouterr()
         assert "Energy:" in captured.out
 

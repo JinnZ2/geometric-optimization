@@ -165,15 +165,20 @@
         {"sensor": "dignity", "pad": [0.60, 0.20, 0.90], "rationale": "Highest D sensor -- autonomy intact; maps to dodecahedron's trust family and P01 Symmetry (identity preservation)"}
       ],
       "bridge_scroll": "admiration inspires (corrupted: flattery); trust stabilizes (corrupted: consensus); intuition as compressed probability; dignity as autonomy intact"
-    }
-  ],
-  "implicit_shapes": [
+    },
     {
+      "energy_term": "IcosahedralEnergy",
+      "class": "gas.energy_terms.IcosahedralEnergy",
+      "suite": "extended",
       "shape": "SHAPE.ICOSA",
       "rosetta_shape_file": "shapes/icosahedron.json",
-      "faces": 20,
-      "role": "20 equation families (F01-F20) -- the E8 solver traverses these as energy landscapes",
-      "note": "No dedicated IcosahedralEnergy term yet. The icosahedron is the dual of the dodecahedron; its 20-family structure is the landscape the solver navigates, while DodecahedralEnergy enforces the angle constraint.",
+      "computation": "Icosahedral symmetry energy: deviation of pairwise dot products from the icosahedral signature |dot| = 1/phi ~ 0.618",
+      "geometric_link": {
+        "e8_role": "Extended energy term. Enforces 20-family icosahedral angular structure. The two characteristic angles (adjacent ~63.4, opposite ~116.6) both produce |dot| = 1/phi. Dual of DodecahedralEnergy -- dodeca constrains the 1/phi^2 angle, icosa constrains the 1/phi angle.",
+        "rosetta_role": "20 equation families (F01-F20). The icosahedron's 20 faces map to domains spanning resonance through topology, organized into five fields (chemical, emotional, cognitive, dream, symbolic).",
+        "dimensional_resonance": "The icosahedron is the Platonic solid with the most faces (20) and the closest to spherical. In E8, this term pushes the neighborhood toward the most isotropic angular distribution achievable under the phi constraint -- maximum coverage of the 8D sphere.",
+        "constants": ["CONST.PHI"]
+      },
       "bridges": {
         "sensors": ["fear", "excitement", "curiosity", "vigilance"],
         "sensor_glyphs": ["warning", "lightning", "magnifying_glass", "eye"],
@@ -186,7 +191,9 @@
         {"sensor": "vigilance", "pad": [-0.10, 0.80, -0.20], "rationale": "Highest arousal sensor -- anomaly detection is fear's sibling; both live in the high-A icosahedral regime"}
       ],
       "bridge_scroll": "fear prepares (corrupted: panic); curiosity reduces entropy (corrupted: distraction); vigilance detects anomalies"
-    },
+    }
+  ],
+  "implicit_shapes": [
     {
       "shape": "SHAPE.RELIEF",
       "rosetta_shape_file": "shapes/relief.json",

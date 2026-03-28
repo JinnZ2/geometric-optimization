@@ -115,10 +115,12 @@ Dream       F12 Networks     F13 Reaction      F14 Measurement   F15 Navigation
 Symbolic    F18 Relativity   F19 Statistical   F20 Topology
 ```
 
-There is no dedicated `IcosahedralEnergy` term yet. The icosahedron is the
-*landscape* the solver traverses, not a constraint it enforces. The
-DodecahedralEnergy (its dual) provides the angular constraint; the 20
-families are the terrain.
+`IcosahedralEnergy` (added in the extended suite) enforces the icosahedral
+angular signature: pairwise dot products of unit neighbors should cluster
+near |dot| = 1/phi ~ 0.618. This is the dual of `DodecahedralEnergy` --
+the dodecahedron constrains the 1/phi^2 angle, the icosahedron constrains
+the 1/phi angle. Together they lock the neighborhood into the full
+icosahedral/dodecahedral symmetry group.
 
 **E8 connection:** The solver's annealing process explores different regions
 of the E8 root system. Each region has a different "flavor" depending on the
@@ -237,8 +239,10 @@ artifact.
 
 Potential extensions:
 
-- **IcosahedralEnergy**: A dedicated energy term enforcing 20-family
-  structure directly, rather than relying on the dodecahedral dual.
+- **Icosahedral/Dodecahedral joint optimization**: Now that both
+  `IcosahedralEnergy` (1/phi) and `DodecahedralEnergy` (1/phi^2) exist,
+  study their interaction and whether the combined constraint produces
+  tighter convergence.
 - **RELIEF detection**: A convergence callback that fires when the solver's
   trajectory matches the RELIEF signature (dP/dt > 0, dA/dt < 0).
 - **PAD-weighted annealing**: Use PAD sensor profiles to dynamically weight

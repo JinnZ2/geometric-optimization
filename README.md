@@ -105,6 +105,7 @@ symbolic framework of sensors, defenses, and principles.
 | `SquareEnergy` | Mean squared dot products (90-degree deviation) | `SHAPE.CUBE` (6 faces) | Structural containment -- Cartesian coordinate substrate |
 | `HexagonalEnergy` | Deviation from 60-degree packing (cos 60 = 0.5) | `GEOM.HEX` | Densest packing -- 2D hex generalizes to 8D E8 sphere packing |
 | `DodecahedralEnergy` | Deviation from icosahedral angle 1/phi^2 | `SHAPE.DODECA` (12 faces) | 12 Principles (Symmetry through Unity) |
+| `IcosahedralEnergy` | Deviation from icosahedral signature \|dot\| = 1/phi | `SHAPE.ICOSA` (20 faces) | 20 equation families (F01-F20) across five fields |
 
 The **icosahedron** (`SHAPE.ICOSA`, 20 faces) maps 20 equation families
 (F01-F20) organized into five fields -- the E8 solver traverses these as
@@ -134,6 +135,21 @@ See [GUIDE.md](GUIDE.md) for a walkthrough of how the E8 energy landscape
 connects to the Rosetta polyhedral ontology.
 
 Bridge data: [`bridges/rosetta-fieldlink.json`](bridges/rosetta-fieldlink.json)
+
+---
+
+## Further Reading
+
+- [THEORY.md](THEORY.md) -- Complete mathematical derivation of the E8 energy
+  functional, seed equations, phi-folding, and convergence theory
+- [GUIDE.md](GUIDE.md) -- How the E8 energy landscape connects to the Rosetta
+  polyhedral ontology (sensors, principles, five fields)
+- [Six-Sigma.md](Six-Sigma.md) -- Quality control analysis applying Six Sigma
+  metrics to the mathematical equation architecture
+- [papers/energy.md](papers/energy.md) -- Thermodynamic analysis of energy
+  efficiency in human-AI collaborative systems
+- [Contributors.md](Contributors.md) -- Multi-intelligence collaborative
+  research team and acknowledgments
 
 ---
 
