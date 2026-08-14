@@ -51,11 +51,12 @@ class E8Lattice:
 
     def coset_density(self, indices: np.ndarray) -> float:
         """Calculate rho_coset for neighborhood"""
-        return np.mean(self.is_coset[indices])
+        return float(np.mean(self.is_coset[indices]))
 
 
 def create_test_point(seed: int = 42) -> np.ndarray:
     """Create a reproducible random test point on the E8 norm-sqrt(2) sphere."""
     rng = np.random.RandomState(seed)
     x = rng.randn(8)
-    return x / np.linalg.norm(x) * np.sqrt(2)
+    point: np.ndarray = x / np.linalg.norm(x) * np.sqrt(2)
+    return point

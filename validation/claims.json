@@ -1,0 +1,368 @@
+{
+  "schema": 1,
+  "description": "Claims this project makes about itself, and the experiments that decide them. Regenerate statuses with: python -m validation.scientific_method run",
+  "claims": [
+    {
+      "id": "C01",
+      "statement": "The 240 generated vectors form the E8 root system: norm^2 = 2, integral inner products, no duplicates.",
+      "source": "THEORY.md#2-e8-lattice, gas/lattice.py",
+      "kind": "empirical",
+      "experiment": "e8_root_system_valid",
+      "status": "SUPPORTED",
+      "evidence": "240 roots, all norm^2=2.0, inner products in [-2.0, -1.0, 0.0, 1.0, 2.0], 0 duplicates",
+      "measurements": {
+        "n_roots": 240.0,
+        "duplicates": 0.0
+      },
+      "revision": 1,
+      "note": "",
+      "history": []
+    },
+    {
+      "id": "C02",
+      "statement": "Each geometric energy term is a non-constant function of the state x.",
+      "source": "THEORY.md#4-seed-equations, gas/energy_terms.py",
+      "kind": "empirical",
+      "experiment": "energy_varies_with_x",
+      "status": "SUPPORTED",
+      "evidence": "worst term OctahedralEnergy: 300/300 distinct values over the sphere",
+      "measurements": {
+        "min_distinct": 300.0,
+        "n_samples": 300.0
+      },
+      "revision": 2,
+      "note": "Revision 1 of the code failed this: terms read only the neighbour set, never x.",
+      "history": [
+        {
+          "revision": 1,
+          "statement": "Each geometric energy term is a non-constant function of the state x.",
+          "status": "FALSIFIED",
+          "evidence": "All 7 terms returned identical values for x and for an unrelated vector; energy took <=10 distinct values over the whole sphere.",
+          "experiment": "energy_varies_with_x",
+          "superseded_because": "Claim retained unchanged; the implementation was corrected instead (gas/energy_terms.py revision 2)."
+        }
+      ]
+    },
+    {
+      "id": "C03",
+      "statement": "No energy term degenerates to a constant over the sphere.",
+      "source": "gas/energy_terms.py",
+      "kind": "empirical",
+      "experiment": "no_term_is_constant",
+      "status": "SUPPORTED",
+      "evidence": "narrowest range: DodecahedralEnergy spans 0.003469",
+      "measurements": {
+        "OctahedralEnergy": 0.032056884,
+        "TetrahedralEnergy": 0.016748887,
+        "GoldenEnergy": 0.075636138,
+        "SquareEnergy": 0.007994636,
+        "HexagonalEnergy": 0.005605284,
+        "DodecahedralEnergy": 0.003469105,
+        "IcosahedralEnergy": 0.004623192
+      },
+      "revision": 2,
+      "note": "Targets the specific revision-1 collapses: TetrahedralEnergy == 1/3 and GoldenEnergy == |1-phi|.",
+      "history": [
+        {
+          "revision": 1,
+          "statement": "No energy term degenerates to a constant over the sphere.",
+          "status": "FALSIFIED",
+          "evidence": "TetrahedralEnergy was exactly 0.333333 and GoldenEnergy exactly 0.618034 at every sampled point.",
+          "experiment": "no_term_is_constant",
+          "superseded_because": "Implementation corrected: tetrahedral now scores x-to-neighbour cosines, golden now scores shell-distance ratios from x."
+        }
+      ]
+    },
+    {
+      "id": "C04",
+      "statement": "Analytic gradients agree with central finite differences to better than 1e-5 relative error.",
+      "source": "gas/energy_terms.py",
+      "kind": "empirical",
+      "experiment": "gradients_match_finite_difference",
+      "status": "SUPPORTED",
+      "evidence": "worst relative error 3.655e-09 (DodecahedralEnergy), tolerance 1e-5",
+      "measurements": {
+        "max_rel_error": 4e-09
+      },
+      "revision": 1,
+      "note": "Standard code verification. Revision 1 had no analytic gradient to check.",
+      "history": []
+    },
+    {
+      "id": "C05",
+      "statement": "Every energy term has a nonzero gradient with respect to x.",
+      "source": "gas/energy_terms.py",
+      "kind": "empirical",
+      "experiment": "gradients_nonzero",
+      "status": "SUPPORTED",
+      "evidence": "smallest gradient norm across all terms and samples: 9.661e-03 (HexagonalEnergy)",
+      "measurements": {
+        "min_grad_norm": 0.009660961
+      },
+      "revision": 2,
+      "note": "",
+      "history": [
+        {
+          "revision": 1,
+          "statement": "Every energy term has a nonzero gradient with respect to x.",
+          "status": "FALSIFIED",
+          "evidence": "||grad|| was exactly 0.000e+00 for all 7 terms: the finite-difference gradient perturbed x while holding the neighbour set fixed, and the terms ignored x.",
+          "experiment": "gradients_nonzero",
+          "superseded_because": "Implementation corrected; gradients are now analytic."
+        }
+      ]
+    },
+    {
+      "id": "C06",
+      "statement": "The recorded energy changes over the course of an optimization run.",
+      "source": "gas/solver.py",
+      "kind": "empirical",
+      "experiment": "solver_energy_changes",
+      "status": "SUPPORTED",
+      "evidence": "273 distinct energies over 301 iterations",
+      "measurements": {
+        "distinct_energies": 273.0
+      },
+      "revision": 2,
+      "note": "",
+      "history": [
+        {
+          "revision": 1,
+          "statement": "The recorded energy changes over the course of an optimization run.",
+          "status": "FALSIFIED",
+          "evidence": "1000 iterations produced exactly 1 distinct energy value: the proposal was scored against the current point's neighbour set, so delta_E was identically 0.",
+          "experiment": "solver_energy_changes",
+          "superseded_because": "step() now re-evaluates the proposal under its own neighbourhood."
+        }
+      ]
+    },
+    {
+      "id": "C07",
+      "statement": "GAS reduces the geometric energy below its starting value.",
+      "source": "README.md#why-this-matters",
+      "kind": "empirical",
+      "experiment": "solver_descends",
+      "status": "SUPPORTED",
+      "evidence": "mean improvement 14.1% over 8 seeds, worst 6.3%",
+      "measurements": {
+        "mean_improvement": 0.140698056,
+        "worst_improvement": 0.06340053
+      },
+      "revision": 1,
+      "note": "",
+      "history": []
+    },
+    {
+      "id": "C08",
+      "statement": "The --all-terms flag changes the computation performed.",
+      "source": "gas/cli.py, README.md",
+      "kind": "empirical",
+      "experiment": "all_terms_flag_has_effect",
+      "status": "SUPPORTED",
+      "evidence": "3-term E=0.304758 (weights 3/3), 7-term E=0.535482 (weights 7/7)",
+      "measurements": {
+        "E_core": 0.304758089,
+        "E_all": 0.535482032
+      },
+      "revision": 2,
+      "note": "",
+      "history": [
+        {
+          "revision": 1,
+          "statement": "The --all-terms flag changes the computation performed.",
+          "status": "FALSIFIED",
+          "evidence": "Output was identical to 9 decimal places with and without the flag: _compute_weights returned 3 weights regardless of term count, so zip() silently discarded terms 4-7.",
+          "experiment": "all_terms_flag_has_effect",
+          "superseded_because": "_compute_weights now returns one weight per term and raises on a count mismatch."
+        }
+      ]
+    },
+    {
+      "id": "C09",
+      "statement": "The annealing schedule decays with the iteration index.",
+      "source": "THEORY.md#9-convergence, gas/solver.py",
+      "kind": "empirical",
+      "experiment": "annealing_schedule_decays",
+      "status": "SUPPORTED",
+      "evidence": "sigma_t 0.05000 -> 0.00204, T_t 0.004104 -> 0.000167 over 800 iterations",
+      "measurements": {
+        "sigma_ratio": 0.040762204
+      },
+      "revision": 2,
+      "note": "THEORY.md 9.2 rests on this: its proof sketch asserts sigma_t, T_t -> 0.",
+      "history": [
+        {
+          "revision": 1,
+          "statement": "The annealing schedule decays with the iteration index.",
+          "status": "FALSIFIED",
+          "evidence": "sigma_t and T_t depended only on rho, never on t; sigma_t stayed within [0.0452, 0.0500] for the entire run.",
+          "experiment": "annealing_schedule_decays",
+          "superseded_because": "A cooling factor exp(-t/tau_anneal) was added to eta_t, alpha_t, sigma_t and T_t."
+        }
+      ]
+    },
+    {
+      "id": "C10",
+      "statement": "Runs are reproducible from a seed, independent of the global NumPy RNG state.",
+      "source": "gas/solver.py, gas/cli.py",
+      "kind": "empirical",
+      "experiment": "reproducible_under_seed",
+      "status": "SUPPORTED",
+      "evidence": "two runs under different global seeds: 0.275303544465 vs 0.275303544465",
+      "measurements": {
+        "run_a": 0.275303544,
+        "run_b": 0.275303544
+      },
+      "revision": 2,
+      "note": "",
+      "history": [
+        {
+          "revision": 1,
+          "statement": "Runs are reproducible from a seed.",
+          "status": "FALSIFIED",
+          "evidence": "The solver drew from the global np.random state, so any other code touching that state changed the result.",
+          "experiment": "reproducible_under_seed",
+          "superseded_because": "The solver now takes an injectable numpy Generator."
+        }
+      ]
+    },
+    {
+      "id": "C11",
+      "statement": "Despite non-convexity, annealing on E8 converges reliably -- GAS finds lower energy than uniform random sampling at equal evaluation budget.",
+      "source": "README.md#why-this-matters",
+      "kind": "empirical",
+      "experiment": "beats_random_search",
+      "status": "FALSIFIED",
+      "evidence": "GAS mean 0.280879 vs random 0.284600 (+1.3%), GAS wins 5/8 seeds",
+      "measurements": {
+        "gas_mean": 0.280878667,
+        "random_mean": 0.284599739,
+        "wins": 5.0,
+        "relative_gain": 0.013074757
+      },
+      "revision": 1,
+      "note": "The headline performance claim. Requires GAS to win at least 6 of 8 seeds against the baseline.",
+      "history": []
+    },
+    {
+      "id": "C12",
+      "statement": "Under the GAS update rule the expected energy decreases: E[E_{t+1}] <= E_t + O(sigma_t^2).",
+      "source": "THEORY.md#9-convergence (9.1, stated as a Lemma)",
+      "kind": "theoretical",
+      "experiment": "expected_energy_decreases",
+      "status": "SUPPORTED",
+      "evidence": "mean one-step dE = -0.003779 over 120 states, bound sigma^2 = 0.002500; 77% of steps were non-increasing",
+      "measurements": {
+        "mean_delta_E": -0.003779435,
+        "sigma_squared": 0.0025,
+        "fraction_non_increasing": 0.766666667
+      },
+      "revision": 2,
+      "note": "Revision-1 premise (deterministic gradient descent) was false because gradients were identically zero; with revision-2 energy terms the premise holds, so the lemma is now empirically decidable. Registered experiment expected_energy_decreases.",
+      "history": [
+        {
+          "revision": 1,
+          "statement": "Under the GAS update rule the expected energy decreases: E[E_{t+1}] <= E_t + O(sigma_t^2).",
+          "status": "UNTESTED",
+          "evidence": "",
+          "experiment": null,
+          "superseded_because": "Revision-1 premise (deterministic gradient descent) was false because gradients were identically zero; with revision-2 energy terms the premise holds, so the lemma is now empirically decidable. Registered experiment expected_energy_decreases."
+        }
+      ]
+    },
+    {
+      "id": "C13",
+      "statement": "With probability 1, GAS converges to a local minimum of E(x) on the E8 manifold.",
+      "source": "THEORY.md#9-convergence (9.2, stated as a Theorem)",
+      "kind": "theoretical",
+      "experiment": null,
+      "status": "UNSUPPORTED",
+      "evidence": "",
+      "measurements": {},
+      "revision": 1,
+      "note": "Labelled a Theorem but supported only by a four-bullet sketch appealing to 'standard simulated annealing theory'. Those results require a cooling schedule of order 1/log(t); the implemented schedule is geometric, which does not satisfy their hypotheses. No proof is given here.",
+      "history": []
+    },
+    {
+      "id": "C14",
+      "statement": "For problems whose global optimum has rho_coset > rho_min, GAS finds the global minimum with high probability.",
+      "source": "THEORY.md#9-convergence (9.3, stated as a Conjecture)",
+      "kind": "conjecture",
+      "experiment": null,
+      "status": "UNTESTED",
+      "evidence": "",
+      "measurements": {},
+      "revision": 1,
+      "note": "Explicitly labelled a conjecture, which is honest. Deciding it needs a problem family with known global optima; none exists in this repository yet.",
+      "history": []
+    },
+    {
+      "id": "C15",
+      "statement": "Empirical validation on known problems shows global recovery.",
+      "source": "THEORY.md#9-convergence (9.3, listed as Evidence)",
+      "kind": "provenance",
+      "experiment": null,
+      "status": "FALSIFIED",
+      "evidence": "No validation study, dataset, benchmark or result table exists anywhere in the repository. The sentence cites work that was never done.",
+      "measurements": {},
+      "revision": 1,
+      "note": "Removed from THEORY.md. Recorded here so the removal is auditable rather than silent.",
+      "history": []
+    },
+    {
+      "id": "C16",
+      "statement": "Sphere packing, supply chain and energy system examples validate the framework against known optimal solutions.",
+      "source": "README.md#examples",
+      "kind": "provenance",
+      "experiment": null,
+      "status": "UNSUPPORTED",
+      "evidence": "No examples/ directory, no benchmark comparing against known optima. benchmarks/random_baseline.py compares GAS against random search only.",
+      "measurements": {},
+      "revision": 1,
+      "note": "Rewritten in README.md as planned work rather than completed validation.",
+      "history": []
+    },
+    {
+      "id": "C17",
+      "statement": "Conventional equation architecture operates at 0.5 sigma quality, with a 94% defect rate across economics, AI training and corporate metrics.",
+      "source": "legacy/Six-Sigma.md",
+      "kind": "empirical",
+      "experiment": null,
+      "status": "UNFALSIFIABLE_HERE",
+      "evidence": "No dataset, sample frame, population definition, coding protocol or inter-rater procedure is given for any of the percentages. The sigma levels are computed from figures that were not measured.",
+      "measurements": {},
+      "revision": 1,
+      "note": "Moved to legacy/. To make this testable, define the population of 'equations' being sampled, the operational definition of a 'defect', and the coding procedure -- then revise this claim and register an experiment.",
+      "history": []
+    },
+    {
+      "id": "C18",
+      "statement": "Robots are 30x-100x more energy expensive than efficient human workers on a full lifecycle basis.",
+      "source": "legacy/papers/energy.md",
+      "kind": "empirical",
+      "experiment": null,
+      "status": "UNFALSIFIABLE_HERE",
+      "evidence": "No citations, no lifecycle inventory, no system boundary and no source for any of the kWh/day figures. The ranges are asserted, not derived.",
+      "measurements": {},
+      "revision": 1,
+      "note": "Moved to legacy/. To make this testable, cite a published lifecycle assessment, state the system boundary, and register an experiment recomputing the ratio from the cited inventory.",
+      "history": []
+    },
+    {
+      "id": "C19",
+      "statement": "The meta-layer's geometric regularization term influences the decoded N-dimensional solution.",
+      "source": "THEORY.md#8-meta-layer, meta_layer/decoder.py",
+      "kind": "empirical",
+      "experiment": "decoder_geometric_regularizer_active",
+      "status": "SUPPORTED",
+      "evidence": "min ||grad R_geo|| = 3.032e-01; turning lambda_3 off moves the decoded solution by at least 7.166e-01",
+      "measurements": {
+        "min_grad_norm": 0.303151231,
+        "min_solution_shift": 0.716586504
+      },
+      "revision": 1,
+      "note": "With revision-1 energy terms the R_geo gradient measured ~3e-11, so lambda_3 was inert and the 'geometric coherence' regularizer did nothing.",
+      "history": []
+    }
+  ]
+}

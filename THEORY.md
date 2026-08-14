@@ -227,23 +227,33 @@ where r_ij = ||v_i|| / ||v_j||, φ = (1 + √5)/2
 
 ### 4.5 Additional Seeds
 
-**Square (90° coordination):**
+All seven terms share one form. For neighbourhood C(x) = {v_1, ..., v_k}, let
+`c_i = <x_hat, v_hat_i>` be the cosine between the state and each neighbour, and
+let `w_i = exp(-||x - v_i||^2 / 2h^2)` be a proximity weight. Each term carries a
+set of ideal cosines `T` and scores
 
 ```
-E_sq(x) = |λ_2(G)|  (second eigenvalue should vanish for planar square)
+E_T(x) = sum_i w_i * min_{t in T} (c_i - t)^2  /  sum_i w_i
 ```
 
-**Hexagonal (120° coordination):**
+| Term | Ideal cosines T | Angle |
+|---|---|---|
+| Octahedral | {0, +-1} | 90 deg, 0 deg, 180 deg |
+| Tetrahedral | {-1/3, 1} | 109.47 deg |
+| Square | {0} | 90 deg |
+| Hexagonal | {+-1/2} | 60 deg, 120 deg |
+| Dodecahedral | {+-1/phi^2} = {+-0.38197} | 67.5 deg |
+| Icosahedral | {+-1/sqrt(5)} = {+-0.44721} | 63.43 deg |
 
-```
-E_hex(x) = variance of {⟨û_i, û_j⟩} over 6-neighborhoods
-```
+The Golden term is the exception: it scores the ratios of successive *distances
+from x* to its neighbours against phi, since "nested scaling" is a statement
+about shell radii rather than angles.
 
-**Dodecahedral/Icosahedral (dvi):**
-
-```
-E_dvi(x) = Σᵢ |cos(72° i) - ⟨û_i, reference⟩|²
-```
+**Corrections from the previous version.** Square was specified as `|lambda_2(G)|`
+and Hexagonal as a variance of dot products; neither matched the code. The
+Dodecahedral constant was given as "1/sqrt(5) ~ 1/phi^2" -- those differ (0.44721
+vs 0.38197). The Icosahedral constant was given as "cos(63.43 deg) = 1/phi ~
+0.618"; cos(63.43 deg) is 1/sqrt(5) = 0.44721.
 
 -----
 
@@ -486,38 +496,83 @@ The `prox` operator for λ₁ is soft-thresholding. The operator for λ₂ proje
 
 ## 9. Convergence Theory {#9-convergence}
 
-### 9.1 Energy Descent Lemma
+> **Evidence status.** Every statement in this section is tracked as a claim in
+> [`validation/claims.json`](validation/claims.json) and re-tested by
+> `python -m validation.scientific_method run`. Current verdicts are in
+> [VALIDATION.md](VALIDATION.md). Nothing here is proved; the labels below say
+> which are measured, which are open, and which were falsified.
 
-**Lemma:** Under the GAS update rule with Metropolis acceptance, the expected energy decreases:
+### 9.1 Energy Descent (Conjecture C12 -- measured, not proved)
+
+**Conjecture:** Under the GAS update rule with Metropolis acceptance, the
+expected one-step energy change is bounded by the noise scale:
 
 ```
-𝔼[E_{t+1}] ≤ E_t + O(σ_t²)
+E[E_{t+1}] <= E_t + O(sigma_t^2)
 ```
 
-**Proof sketch:** The gradient term provides deterministic descent. The φ-folding term rotates toward lower-energy coset regions. The Metropolis criterion only accepts uphill moves with probability exp(-ΔE/T), maintaining detailed balance.
+**Status:** No proof. Measured over 120 independent states, the mean one-step
+change is negative and within the sigma^2 bound (see C12 in VALIDATION.md).
+This is evidence, not a theorem: it establishes the bound at one sigma_t on one
+energy landscape, and says nothing about other parameter regimes.
 
-### 9.2 Convergence to Local Minimum
+**Note on the previous version.** This was stated as a *Lemma* whose proof
+sketch began "the gradient term provides deterministic descent". That premise
+was false: the revision-1 energy terms ignored the state `x`, so every gradient
+was identically zero. The premise holds for revision 2, which is what makes the
+statement testable at all.
 
-**Theorem:** With probability 1, GAS converges to a local minimum of E(x) on the E₈ manifold.
+### 9.2 Convergence to a Local Minimum (Open -- claim C13, UNSUPPORTED)
 
-**Proof sketch:**
+**Statement:** With probability 1, GAS converges to a local minimum of E(x) on
+the E8 manifold.
 
-1. The annealing schedules ensure σ_t, T_t → 0
-1. The energy is bounded below (E ≥ 0 by construction)
-1. The adaptive damping η_t → 0 as ρ → 1
-1. By standard simulated annealing theory, this guarantees convergence
+**Status:** Unproved and currently unsupported. The previous version presented
+this as a *Theorem* justified by four bullets appealing to "standard simulated
+annealing theory". That appeal does not go through:
 
-### 9.3 Global Optimality (Conjecture)
+1. The classical almost-sure convergence results (Geman & Geman; Hajek) require
+   a cooling schedule of order `c / log(t)`. The implemented schedule is
+   geometric, `exp(-t / tau_anneal)`, which cools far too fast to satisfy their
+   hypotheses.
+2. The revision-1 schedule did not cool at all -- `sigma_t` and `T_t` depended
+   only on `rho`, never on `t` -- so the stated condition `sigma_t, T_t -> 0`
+   was false outright. Revision 2 fixes the schedule (claim C09), but a
+   geometric schedule still does not license the classical theorem.
 
-**Conjecture:** For problems where the global optimum has ρ_coset > ρ_min, GAS finds the global minimum with high probability.
+Boundedness below (`E >= 0` by construction) does hold. What is missing is any
+argument connecting this particular schedule to a convergence guarantee.
 
-**Evidence:**
+### 9.3 Global Optimality (Conjecture -- claim C14, UNTESTED)
 
-- E₈ lattice has no deep local minima away from the coset
-- φ-folding provides a “highway” toward high-ρ regions
-- Empirical validation on known problems shows global recovery
+**Conjecture:** For problems where the global optimum has `rho_coset > rho_min`,
+GAS finds the global minimum with high probability.
 
-**Open question:** Formal proof requires establishing the energy landscape topology.
+**Status:** Untested. Deciding it requires a family of problems with known
+global optima; none exists in this repository. The heuristic motivations
+(no deep local minima away from the coset; phi-folding as a "highway" toward
+high-rho regions) are unverified intuitions, not evidence.
+
+**Retracted claim.** The previous version listed "Empirical validation on known
+problems shows global recovery" as evidence for this conjecture. No such
+validation exists anywhere in this repository, and none was ever performed. The
+sentence has been removed; it is recorded as falsified claim C15 so the
+retraction is auditable.
+
+### 9.4 What has actually been measured
+
+Against uniform random sampling of the sphere at an equal evaluation budget,
+GAS performs about the same -- it does not reliably win (claim C11, FALSIFIED).
+Reproduce with:
+
+```bash
+python -m benchmarks.random_baseline --budget 500 --seeds 8
+```
+
+The solver does descend from its starting point (claim C07), the energy
+landscape is continuous and non-degenerate (C02, C03), and the analytic
+gradients are correct to ~1e-9 (C04). What has *not* been shown is that any of
+this yields an advantage over trivial search.
 
 -----
 

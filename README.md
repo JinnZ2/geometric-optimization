@@ -13,6 +13,14 @@ intelligences exploring fundamental alternatives to conventional optimization.
 
 **Anonymous collaborative research project -- JinnZ2**
 
+> **Evidence status.** This is an exploratory prototype, not a validated
+> method. Every claim the project makes about itself is registered in
+> [`validation/claims.json`](validation/claims.json), decided by an experiment,
+> and reported in [VALIDATION.md](VALIDATION.md) -- including the claims that
+> came back falsified. Most notably: **GAS has not been shown to outperform
+> uniform random sampling** at an equal evaluation budget (claim C11). Read
+> VALIDATION.md before relying on anything here.
+
 ---
 
 ## What is G-Opt?
@@ -85,8 +93,10 @@ See [THEORY.md](THEORY.md) for the complete mathematical derivation.
    that linear models miss
 3. **Culturally agnostic** -- Based on mathematical physics, not economic
    ideology
-4. **Computationally tractable** -- Despite non-convexity, annealing on E8
-   converges reliably
+4. **Tractable to run** -- the solver is cheap per iteration and does descend
+   from its starting point (claim C07). It has *not* been shown to beat random
+   search (claim C11, falsified) -- treat convergence quality as an open
+   question, not a feature
 
 ---
 
@@ -104,8 +114,8 @@ symbolic framework of sensors, defenses, and principles.
 | `GoldenEnergy` | Median deviation of distance ratios from phi | `CONST.PHI` | Universal scaling -- threads through all icosahedral/dodecahedral forms |
 | `SquareEnergy` | Mean squared dot products (90-degree deviation) | `SHAPE.CUBE` (6 faces) | Structural containment -- Cartesian coordinate substrate |
 | `HexagonalEnergy` | Deviation from 60-degree packing (cos 60 = 0.5) | `GEOM.HEX` | Densest packing -- 2D hex generalizes to 8D E8 sphere packing |
-| `DodecahedralEnergy` | Deviation from icosahedral angle 1/phi^2 | `SHAPE.DODECA` (12 faces) | 12 Principles (Symmetry through Unity) |
-| `IcosahedralEnergy` | Deviation from icosahedral signature \|dot\| = 1/phi | `SHAPE.ICOSA` (20 faces) | 20 equation families (F01-F20) across five fields |
+| `DodecahedralEnergy` | Deviation from dodecahedral angle 1/phi^2 | `SHAPE.DODECA` (12 faces) | 12 Principles (Symmetry through Unity) |
+| `IcosahedralEnergy` | Deviation from icosahedral signature \|dot\| = 1/sqrt(5) | `SHAPE.ICOSA` (20 faces) | 20 equation families (F01-F20) across five fields |
 
 The **icosahedron** (`SHAPE.ICOSA`, 20 faces) maps 20 equation families
 (F01-F20) organized into five fields -- the E8 solver traverses these as
@@ -144,10 +154,11 @@ Bridge data: [`bridges/rosetta-fieldlink.json`](bridges/rosetta-fieldlink.json)
   functional, seed equations, phi-folding, and convergence theory
 - [GUIDE.md](GUIDE.md) -- How the E8 energy landscape connects to the Rosetta
   polyhedral ontology (sensors, principles, five fields)
-- [Six-Sigma.md](Six-Sigma.md) -- Quality control analysis applying Six Sigma
-  metrics to the mathematical equation architecture
-- [papers/energy.md](papers/energy.md) -- Thermodynamic analysis of energy
-  efficiency in human-AI collaborative systems
+- [VALIDATION.md](VALIDATION.md) -- Generated record of every claim, the
+  experiment that decides it, and what that experiment measured
+- [legacy/](legacy/) -- Superseded code and documents, kept for provenance:
+  the revision-1 solver, and two essays whose quantitative claims have no
+  stated method or sources (see claims C17 and C18)
 - [Contributors.md](Contributors.md) -- Multi-intelligence collaborative
   research team and acknowledgments
 
@@ -165,13 +176,55 @@ Requirements: Python 3.8+, NumPy, SciPy. Optional: JAX for GPU acceleration.
 
 ---
 
-## Examples
+## Benchmarks
 
-- **Sphere Packing** -- Validation against known optimal solutions
-- **Supply Chain** -- Multi-objective resource allocation
-- **Energy Systems** -- Real-world infrastructure design
+What exists today is a single baseline comparison:
+
+```bash
+python -m benchmarks.random_baseline --budget 500 --seeds 8
+```
+
+It reports GAS (single- and multi-start) against uniform random sampling at a
+matched evaluation budget. At present the three are statistically
+indistinguishable.
+
+**Planned, not yet built** -- these were previously listed as completed
+validation, which they were not:
+
+- **Sphere Packing** -- comparison against known optimal packings
+- **Supply Chain** -- multi-objective resource allocation
+- **Energy Systems** -- infrastructure design case study
 
 ---
+
+## Validating Claims
+
+The repository carries its own claim register and a small harness that re-tests
+it. A falsified claim is a recorded result, not a build failure -- the harness
+only fails on a *regression* (a claim that was supported coming back falsified),
+so work continues on the open ones.
+
+```bash
+# Re-run every experiment and regenerate VALIDATION.md
+python -m validation.scientific_method run
+
+# See where each claim stands
+python -m validation.scientific_method status
+
+# Revise a claim that did not survive, then re-test it.
+# The previous wording and verdict are kept in the claim's history.
+python -m validation.scientific_method revise C11 \
+    --statement "GAS matches random search at equal budget" \
+    --note "why the earlier wording was superseded" --rerun
+
+# Register a new claim
+python -m validation.scientific_method add --id C20 \
+    --statement "..." --source "THEORY.md#5" --experiment my_experiment
+```
+
+Experiments live in [`validation/experiments.py`](validation/experiments.py).
+An experiment that cannot come back falsified is not evidence; each one is
+written so that it fails against the code in `legacy/`.
 
 ## Citation
 
