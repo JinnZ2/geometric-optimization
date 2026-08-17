@@ -4,7 +4,7 @@
 
 **Geometric Optimization via E8 Lattice Structure** — a Python research/scientific computing package implementing a Geometric Annealing Solver (GAS) that uses the E8 root system for optimization in 8-dimensional space, with a meta-layer for mapping between N and 8 dimensions.
 
-- **Version:** 0.1.0 (research prototype / alpha)
+- **Version:** 0.2.0 (research prototype / alpha — see VALIDATION.md)
 - **License:** Apache 2.0
 - **Python:** 3.8+
 
@@ -20,9 +20,19 @@ geometric-optimization/
 ├── gas/                    # Core module: Geometric Annealing Solver
 │   ├── __init__.py         #   Subpackage exports
 │   ├── lattice.py          #   E8Lattice class (240-root system, KDTree search)
-│   ├── energy_terms.py     #   Energy term ABC + 6 concrete terms
+│   ├── energy_terms.py     #   Energy term ABC + 7 concrete terms (revision 2)
 │   ├── solver.py           #   GASParams, GASState, GeometricAnnealingSolver
 │   └── cli.py              #   CLI entry point (gopt-optimize)
+├── validation/             # Claim register + scientific-method harness
+│   ├── claims.json         #   Every claim, its source, status and history
+│   ├── experiments.py      #   Experiments that decide each claim
+│   └── scientific_method.py #  CLI: run / status / revise / add
+├── benchmarks/
+│   └── random_baseline.py  #   GAS vs uniform random sampling
+├── legacy/                 # Superseded code and documents (see legacy/README.md)
+│   ├── gas/                #   Revision-1 energy_terms.py and solver.py
+│   ├── Six-Sigma.md        #   Moved: claim C17, no stated method
+│   └── papers/energy.md    #   Moved: claim C18, no citations
 ├── meta_layer/             # N-dimensional decoder/inverse solver
 │   ├── __init__.py         #   Subpackage exports
 │   └── decoder.py          #   ProximalGeometricDecoder (8↔N mapping via L-BFGS-B)
@@ -34,11 +44,10 @@ geometric-optimization/
 │   └── test_cli.py
 ├── .github/workflows/ci.yml  # CI pipeline (lint + type check + test)
 ├── .pre-commit-config.yaml   # Pre-commit hooks (black, flake8, whitespace)
-├── papers/                 # Research documents
-│   └── energy.md
 ├── README.md
 ├── THEORY.md               # Full mathematical derivation (~20KB)
-├── Six-Sigma.md            # Quality control analysis
+├── VALIDATION.md           # GENERATED - claim/evidence record, do not hand-edit
+├── CITATION.cff
 └── Contributors.md
 ```
 
@@ -87,7 +96,31 @@ mypy gas/ meta_layer/
 
 # CLI optimizer
 gopt-optimize --max-iters 500 --seed 42
+
+# Re-decide every recorded claim and regenerate VALIDATION.md
+python -m validation.scientific_method run
+python -m validation.scientific_method status
+python -m validation.scientific_method revise C11 --statement "..." --rerun
+
+# Baseline benchmark
+python -m benchmarks.random_baseline --budget 500 --seeds 8
 ```
+
+## Scientific Integrity Workflow
+
+This repository tracks its own claims. Before asserting anything about what the
+code achieves, check `VALIDATION.md`. When changing behaviour:
+
+1. Run `python -m validation.scientific_method run` — it fails only on a
+   *regression* (a SUPPORTED claim coming back FALSIFIED).
+2. If a claim's wording no longer matches what is being tested, use `revise`
+   rather than editing `claims.json` by hand — it preserves the prior wording
+   and the reason it was superseded.
+3. A new capability claim needs a new experiment that can actually fail.
+   `TestFalsification` in the test suite is written to fail against `legacy/`.
+
+**Known open results:** GAS has not been shown to beat random search (C11).
+THEORY.md 9.2 is unproved (C13). Do not describe the method as validated.
 
 ## Architecture
 
@@ -97,9 +130,12 @@ gopt-optimize --max-iters 500 --seed 42
 
 2. **Energy Terms** (`gas/energy_terms.py`) — Abstract `EnergyTerm` base class with implementations:
    - Core: `OctahedralEnergy`, `TetrahedralEnergy`, `GoldenEnergy`
-   - Extended: `SquareEnergy`, `HexagonalEnergy`, `DodecahedralEnergy`
+   - Extended: `SquareEnergy`, `HexagonalEnergy`, `DodecahedralEnergy`,
+     `IcosahedralEnergy`
    - `create_energy_suite(include_all=False)` returns the standard or full set
-   - Gradients computed via finite differences
+   - Each term scores x-to-neighbour cosines against a `target_cosines` set,
+     kernel-weighted by proximity; **analytic** gradients, verified against
+     finite differences (claim C04)
 
 3. **Solver** (`gas/solver.py`) — `GeometricAnnealingSolver` performs optimization with:
    - phi-rotation transforms
@@ -130,10 +166,16 @@ gopt-optimize --max-iters 500 --seed 42
 
 ## Testing
 
-49 tests across 5 test files covering lattice generation, energy terms, solver, decoder, and CLI. Run with `pytest`. Tests use `pytest.fixture` for shared lattice instances and `@pytest.mark.parametrize` for energy term variants.
+105 tests across 5 test files covering lattice generation, energy terms, solver, decoder, and CLI. Run with `pytest`. Tests use `pytest.fixture` for shared lattice instances and `@pytest.mark.parametrize` for energy term variants.
+
+`TestFalsification` classes in `test_energy_terms.py` and `test_solver.py` encode
+one test per defect found in the revision-1 audit; each is written to fail
+against the corresponding file in `legacy/gas/`. Do not weaken them — a
+regression test that cannot fail is not evidence.
 
 ## CI/CD
 
 GitHub Actions workflow (`.github/workflows/ci.yml`) runs on push/PR to main/master:
-- Matrix: Python 3.8, 3.9, 3.10, 3.11
-- Steps: flake8 lint, mypy type check, pytest with coverage
+- Matrix: Python 3.10, 3.11, 3.12
+- Steps: flake8 lint, mypy type check, pytest with coverage, claim re-test,
+  and a check that `VALIDATION.md` is not stale

@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software, please cite it as below. Note that it is an
+  exploratory research prototype: see VALIDATION.md for which of its claims
+  are supported by evidence and which are not.
+title: "Geometric Optimization via E8 Lattice Structure"
+abstract: >-
+  A research prototype exploring optimization by geometric coherence on the E8
+  root system, with a Geometric Annealing Solver and an N-to-8-dimensional
+  meta-layer. The repository carries a claim register (validation/claims.json)
+  and a harness that re-tests every claim it makes about itself. As of this
+  version the solver has not been shown to outperform uniform random sampling.
+type: software
+authors:
+  - name: "JinnZ2 Collaborative Research"
+    website: "https://github.com/JinnZ2"
+repository-code: "https://github.com/JinnZ2/geometric-optimization"
+license: Apache-2.0
+version: 0.2.0
+keywords:
+  - optimization
+  - E8 lattice
+  - root system
+  - simulated annealing
+  - geometric methods

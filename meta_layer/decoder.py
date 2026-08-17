@@ -41,8 +41,18 @@ class ProximalGeometricDecoder:
     ) -> np.ndarray:
         """
         Solve: min ||W^T y - x*||² + λ₁||y||₁ + λ₂·Cost(y) + λ₃·R_geo(y)
+
+        ``self.W`` must have orthonormal columns (``W^T W = I``). The geometric
+        gradient below differentiates along the columns of W and treats the
+        result as a gradient in x-space, which is only the chain rule when the
+        columns are orthonormal.
         """
         N = self.W.shape[0]
+        if not np.allclose(self.W.T @ self.W, np.eye(8), atol=1e-8):
+            raise ValueError(
+                "W must have orthonormal columns (W^T W = I); "
+                "orthonormalize with np.linalg.qr(W)[0]"
+            )
 
         # Warm start: least squares solution
         WtW = self.W.T @ self.W
@@ -76,12 +86,26 @@ class ProximalGeometricDecoder:
             # L1 subgradient
             grad += self.lambda_1 * np.sign(y)
 
+            # Cost-model gradient. Omitting this left `jac` inconsistent with
+            # `objective` whenever a cost_model was supplied, which breaks the
+            # line search L-BFGS-B relies on.
+            if cost_model is not None:
+                eps = 1e-6
+                for i in range(N):
+                    y_p, y_m = y.copy(), y.copy()
+                    y_p[i] += eps
+                    y_m[i] -= eps
+                    grad[i] += (
+                        self.lambda_2 * (cost_model(y_p) - cost_model(y_m)) / (2 * eps)
+                    )
+
             # Geometric gradient (via chain rule)
             grad += self.lambda_3 * self._compute_R_geo_gradient(y)
 
             return grad
 
-        # BFGS optimization with box constraints for feasibility
+        # L-BFGS-B is used for its robust line search; no box constraints are
+        # imposed, so this is an unconstrained solve.
         result = minimize(
             objective,
             y_init,
@@ -90,7 +114,8 @@ class ProximalGeometricDecoder:
             options={"maxiter": max_iters, "ftol": 1e-6},
         )
 
-        return result.x
+        solution: np.ndarray = result.x
+        return solution
 
     def _compute_R_geo(self, y: np.ndarray) -> float:
         """Geometric regularization: E(W^T y) - log(ρ_coset)"""
@@ -105,7 +130,7 @@ class ProximalGeometricDecoder:
             energy += term.compute(x, neighbors)
 
         # Penalize low coset density
-        return energy - np.log(rho + 1e-10)
+        return float(energy - np.log(rho + 1e-10))
 
     def _compute_R_geo_gradient(self, y: np.ndarray) -> np.ndarray:
         """Chain rule: ∇_y R_geo = W · ∇_x R_geo"""
@@ -127,4 +152,5 @@ class ProximalGeometricDecoder:
             grad_x[i] = (R_plus - R0) / eps
 
         # Map back to y-space
-        return self.W @ grad_x
+        grad_y: np.ndarray = self.W @ grad_x
+        return grad_y

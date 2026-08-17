@@ -45,7 +45,9 @@ print(f"Coset density: {result.rho_coset:.3f}")
 N = 20
 rng = np.random.RandomState(42)
 W = rng.randn(N, 8)
-W = np.linalg.qr(W.T)[0].T  # Orthonormalize columns for stability
+# Orthonormalize the 8 columns (each a vector in R^N). Using qr(W.T)[0].T here
+# silently returns an (8, 8) matrix, collapsing N to 8.
+W = np.linalg.qr(W)[0]
 
 decoder = ProximalGeometricDecoder(W, lattice, energy_terms)
 y_optimal = decoder.decode(result.x)

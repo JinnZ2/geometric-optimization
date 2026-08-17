@@ -9,7 +9,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="geometric-optimization",
-    version="0.1.0",
+    version="0.2.0",
     author="JinnZ2 Collaborative Research",
     author_email="anonymous@research.local",
     description="Geometric optimization via E8 lattice structure",
@@ -31,8 +31,10 @@ setup(
     ],
     python_requires=">=3.8",
     install_requires=[
-        "numpy>=1.20.0",
-        "scipy>=1.7.0",
+        # Upper bounds pin the tested major versions: an unbounded requirement
+        # means the environment a result was produced in cannot be recreated.
+        "numpy>=1.20.0,<3.0",
+        "scipy>=1.7.0,<2.0",
     ],
     extras_require={
         "dev": [

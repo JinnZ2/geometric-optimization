@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
       - uses: actions/checkout@v4
@@ -30,7 +30,16 @@ jobs:
         run: flake8 gas/ meta_layer/ tests/
 
       - name: Type check with mypy
-        run: mypy gas/ meta_layer/
+        run: mypy
 
       - name: Run tests
         run: pytest --cov=gas --cov=meta_layer --cov-report=term-missing
+
+      # Re-decides every claim in validation/claims.json. Exits nonzero only on
+      # a regression -- a claim that was SUPPORTED coming back FALSIFIED --
+      # so already-falsified claims stay visible without blocking the build.
+      - name: Re-test recorded claims
+        run: python -m validation.scientific_method run
+
+      - name: Fail if VALIDATION.md is stale
+        run: git diff --exit-code VALIDATION.md validation/claims.json

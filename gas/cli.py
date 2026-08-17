@@ -42,13 +42,14 @@ def main(argv=None):
     )
     args = parser.parse_args(argv)
 
-    if args.seed is not None:
-        np.random.seed(args.seed)
+    # The solver draws from an injected Generator, so seeding must go through
+    # it -- setting the global np.random state would no longer reach the solver.
+    rng = np.random.default_rng(args.seed)
 
     lattice = E8Lattice()
     energy_terms = create_energy_suite(include_all=args.all_terms)
     params = GASParams(max_iters=args.max_iters, rho_min=args.rho_min)
-    solver = GeometricAnnealingSolver(lattice, energy_terms, params)
+    solver = GeometricAnnealingSolver(lattice, energy_terms, params, rng=rng)
 
     x_init = create_test_point(
         args.seed if args.seed is not None else 42
