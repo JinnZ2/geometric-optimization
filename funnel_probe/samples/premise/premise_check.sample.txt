@@ -1,0 +1,76 @@
+premise check on the reduced landscape: 361 x 361 grid, RK4 h=0.02 (0.004 within 0.3 of the wall, h*lambda <= 2 in the channel), tol 1e-06 or at a pole, cap 50000 steps
+r_h = 0.15 -> S^7 cap fraction f_h = 2.443e-07 (the RANDOM arm's comparator; Q1 as pre-registered used f(w), see docstring)
+  predicted random hit rate per run: n=600 -> 0.0001 ; n=2400 -> 0.0006
+
+  w = 0.1   minima found: 123  (unconverged cells 497, max steps used 50000)
+     E -0.9239 at theta 0.411 psi 0.000  cells   7735  angle to t_m 0.011
+     E +0.0000 at theta 3.141 psi 0.004  cells   1006  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.061  cells   1492  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.100  cells    430  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.140  cells   1428  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.201  cells   1475  angle to t_m 2.741
+     P1 unique global min near t_m, gap >= 0.2 : True (gap 0.924)
+     P2 basin volume fraction f(w) = 1.112e-04 <= 0.02 : True
+     P3 basin inside sector psi < 3w: max psi 0.585 vs 0.300 : False
+     P4 cap-outside-sector cells in basin: 2767 : False
+     PREMISE FAILS
+     random-arm expectation from f(w) (pre-reg Q1 as written): n=2400 -> 0.2343 ; from f_h: 0.0006
+
+  w = 0.2   minima found: 114  (unconverged cells 1370, max steps used 50000)
+     E -0.9239 at theta 0.411 psi 0.000  cells  15325  angle to t_m 0.011
+     E +0.0000 at theta 3.141 psi 0.021  cells    866  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.061  cells   1507  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.100  cells    449  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.140  cells   1500  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.200  cells   1504  angle to t_m 2.741
+     P1 unique global min near t_m, gap >= 0.2 : True (gap 0.924)
+     P2 basin volume fraction f(w) = 3.305e-03 <= 0.02 : True
+     P3 basin inside sector psi < 3w: max psi 1.169 vs 0.600 : False
+     P4 cap-outside-sector cells in basin: 5993 : False
+     PREMISE FAILS
+     random-arm expectation from f(w) (pre-reg Q1 as written): n=2400 -> 0.9996 ; from f_h: 0.0006
+
+  w = 0.4   minima found: 100  (unconverged cells 5143, max steps used 50000)
+     E -0.9239 at theta 0.411 psi 0.000  cells  32683  angle to t_m 0.011
+     E +0.0000 at theta 3.141 psi 0.022  cells    829  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.061  cells   1453  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.100  cells    425  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.140  cells   1464  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.201  cells   1463  angle to t_m 2.741
+     P1 unique global min near t_m, gap >= 0.2 : True (gap 0.924)
+     P2 basin volume fraction f(w) = 2.149e-02 <= 0.02 : False
+     P3 basin inside sector psi < 3w: max psi 2.644 vs 1.200 : False
+     P4 cap-outside-sector cells in basin: 15191 : False
+     PREMISE FAILS
+     random-arm expectation from f(w) (pre-reg Q1 as written): n=2400 -> 1.0000 ; from f_h: 0.0006
+
+  w = 0.8   minima found: 68  (unconverged cells 0, max steps used 1651)
+     E -0.9239 at theta 0.411 psi 0.000  cells  41696  angle to t_m 0.011
+     E +0.0000 at theta 3.141 psi 0.004  cells    824  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.061  cells   1443  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.100  cells    416  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.140  cells   1444  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.201  cells   1446  angle to t_m 2.741
+     P1 unique global min near t_m, gap >= 0.2 : True (gap 0.924)
+     P2 basin volume fraction f(w) = 6.540e-02 <= 0.02 : False
+     P3 basin inside sector psi < 3w: max psi 3.133 vs 2.400 : False
+     P4 cap-outside-sector cells in basin: 7728 : False
+     PREMISE FAILS
+     random-arm expectation from f(w) (pre-reg Q1 as written): n=2400 -> 1.0000 ; from f_h: 0.0006
+
+  w = 1.6   minima found: 69  (unconverged cells 0, max steps used 9251)
+     E -0.9239 at theta 0.411 psi 0.000  cells  53360  angle to t_m 0.011
+     E -0.1108 at theta 0.418 psi 3.142  cells     93  angle to t_m 0.818
+     E +0.0000 at theta 3.141 psi 0.022  cells    824  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.061  cells   1442  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.100  cells    412  angle to t_m 2.741
+     E +0.0000 at theta 3.141 psi 0.140  cells   1442  angle to t_m 2.741
+     P1 unique global min near t_m, gap >= 0.2 : True (gap 0.813)
+     P2 basin volume fraction f(w) = 2.366e-01 <= 0.02 : False
+     P3 basin inside sector psi < 3w: max psi 3.133 vs 4.800 : True
+     P4 cap-outside-sector cells in basin: 0 : True
+     PREMISE FAILS
+     random-arm expectation from f(w) (pre-reg Q1 as written): n=2400 -> 1.0000 ; from f_h: 0.0006
+
+ADMITTED widths for C22: [] ; EXCLUDED: [0.1, 0.2, 0.4, 0.8, 1.6]
+landscape NOT_IN_CLASS ; 648 s

@@ -236,3 +236,78 @@ seed; at w <= 0.2 the success set is empty and nothing persists, so those
 widths read NOT_FOUND_IN_RANGE. Rule N finds the width curve monotone. The
 re-scoring prediction HELD. C22 (verified-thin landscape) is the
 construction under which T2 could be made evaluable, by enumerating starts.
+
+## C22 — the channel-only landscape (PREREGISTRATION_C22.md, commit 7f011fe): NOT_IN_CLASS, C22 NOT REGISTERED, GAS NOT RUN
+
+Order: "rebuild the landscape so the basin is reachable ONLY through the
+channel; verify that premise by exhaustive check BEFORE any run (new claim
+C22)". Landscape `channel_landscape_v2.py` (commit 07c52f4); check
+`premise_check.py`; outputs `samples/premise/`. The pre-registration's own
+rule: "if every width fails, the landscape is NOT_IN_CLASS and C22 is not
+run." Every width fails.
+
+### What did not hold, first
+
+    w     P1 unique min   P2 f(w) <= 0.02    P3 basin inside psi < 3w        P4 basin cells outside sector   PREMISE
+    0.1   True (0.924)    True  (1.11e-4)    False (max psi 0.585 vs 0.300)  2767 of  7735                   FAILS
+    0.2   True (0.924)    True  (3.31e-3)    False (max psi 1.169 vs 0.600)  5993                            FAILS
+    0.4   True (0.924)    False (2.15e-2)    False (max psi 2.644 vs 1.200)  15191                           FAILS
+    0.8   True (0.924)    False (6.54e-2)    False (max psi 3.133 vs 2.400)  7728                            FAILS
+    1.6   True (0.813)    False (2.37e-1)    True  (sector is the sphere)    0                               FAILS
+
+    ADMITTED widths: none.  landscape v2: NOT_IN_CLASS.  C22: not added to claims.json.  GAS: not run.
+    361 x 361 grid, 130321 cells per width, 648 s.
+
+The basin is NOT reachable only through the channel, and the reason is a
+property of the landscape, not of the check: the bowl pushes every start
+toward the antipode and the wall pushes back, and the two cancel at
+theta* = 0.432 — a SHELF, a ring of equilibria just inside the wall, flat
+in psi except for the channel's own exponential tail. Every start inside
+the wall slides onto the shelf; the tail then pulls the shelf into the
+basin from psi well beyond the sector edge (to 2x the half-width at
+w = 0.1, to psi = 2.64 of pi at w = 0.4). The channel is where the shelf
+DROPS into the basin, not the only way to reach it. `premise_shelf.py`
+computes theta*, the psi-gradient on the shelf per width, and the drift
+time from psi = pi/2 to the sector edge (3e38 time units at w = 0.1, 1.4e7
+at w = 0.2, 1.4 at w = 0.4). So "reachable only through the channel" is
+true at w <= 0.2 only on a timescale no optimiser runs at, and false at
+w = 0.4 outright. On the GAS side this would be a random walk around the
+shelf's 6-sphere until the sector cap is hit — a different experiment from
+the one C22 was written for, and not one to improvise after the check.
+
+### The check's own history (two numerical amendments, constants untouched, both before any run)
+
+    run 1  h = 0.02 everywhere, cap 10000      78% of cells unconverged at w = 0.1, 173 "minima"
+           cause: the wall's theta-curvature ~H/s_w^2 = 200 gives h*lambda = 4 > RK4's bound; cells oscillate
+    run 2  h = 0.004 within 0.3 of the wall, cap 50000   killed: a 37x37 subgrid showed 73-83% unconverged at a
+           CONSTANT gradient 3.00e-4 = A sin(1e-3)/2 — the theta clip at pi - 1e-3 holding cells converged
+           to the antipode 1e-3 short of the pole, above TOL, forever; plus |grad| ~ 20 at w = 0.1: the
+           channel's psi-curvature (D T S + H W) C / (w^2 sin^2 theta) ~ 900, h = 0.02 unstable in psi
+    run 3  a cell at either clip counts as converged; h bounded by 2 / lambda_est per cell      THIS RESULT
+           unconverged after 50000 steps: 497 / 1370 / 5143 / 0 / 0 cells, every one on the shelf (census)
+
+The first reading of the run-2 stall was the shelf; the bulk was the clip.
+Both are recorded in `premise_shelf.py`'s docstring in the order found.
+The amendments change where the integrator steps and what counts as
+settled; no landscape constant, no premise threshold and no claim text
+moved. The remaining unconverged cells are shelf drifters at gradients
+between TOL and 1e-3, counted beside P3 so the t -> inf limit is not read
+as a pass; they are already outside the sector, so including them could
+only make P3 fail harder.
+
+### Two things recorded against this session's own work
+
+The pre-registered Q1 compared the random arm to 1 - (1 - f(w))^n with
+f(w) the basin's VOLUME fraction, while the hit criterion is a cap of
+angular radius r_h = 0.15 around t_m — a different fraction, f_h =
+2.44e-7 on S^7. Written into `premise_check.py` and `experiment_c22.py`
+before any run (Q1 as registered beside Q1' corrected), and now moot.
+And `experiment_c22.py` (commit 1f7ba1f) is code that has never executed:
+it reads the admitted widths from `premise_check.json`, finds none, and is
+left in place as the experiment C22 would have been.
+
+Scope: deterministic gradient flow on the reduced (theta, psi) landscape;
+the premise is a statement about gradient-flow basins, and the "only
+through the channel" property GAS would experience is a Metropolis
+question on the shelf that this check does not ask. Nothing here is a
+GAS result; C20 and C21 stand as recorded above.

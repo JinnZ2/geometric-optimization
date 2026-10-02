@@ -1,0 +1,56 @@
+{
+ "theta_shelf": 0.4321609630809755,
+ "E_shelf": 0.3722830567850772,
+ "widths": {
+  "0.1": {
+   "grad_psi_half_pi": 3.1721773618258816e-41,
+   "grad_psi_2p5": 3.056161201867267e-76,
+   "drift_time": 3.153305240542757e+38,
+   "cells": 1369,
+   "unconverged": 11,
+   "on_shelf": 11,
+   "antipode": 978,
+   "near_tm": 86
+  },
+  "0.2": {
+   "grad_psi_half_pi": 2.9606264371157976e-09,
+   "grad_psi_2p5": 3.5491247736633185e-18,
+   "drift_time": 13554803.865413912,
+   "cells": 1369,
+   "unconverged": 10,
+   "on_shelf": 10,
+   "antipode": 968,
+   "near_tm": 171
+  },
+  "0.4": {
+   "grad_psi_half_pi": 0.1028833642857267,
+   "grad_psi_2p5": 0.00041191966600687884,
+   "drift_time": 1.4271920397739146,
+   "cells": 1369,
+   "unconverged": 50,
+   "on_shelf": 50,
+   "antipode": 952,
+   "near_tm": 357
+  },
+  "0.8": {
+   "grad_psi_half_pi": 2.792804591675504,
+   "grad_psi_2p5": 0.4780137045520392,
+   "drift_time": 0.0,
+   "cells": 1369,
+   "unconverged": 0,
+   "on_shelf": 0,
+   "antipode": 915,
+   "near_tm": 444
+  },
+  "1.6": {
+   "grad_psi_half_pi": 2.253820913700341,
+   "grad_psi_2p5": 0.9863982877989553,
+   "drift_time": 0.0,
+   "cells": 1369,
+   "unconverged": 0,
+   "on_shelf": 0,
+   "antipode": 799,
+   "near_tm": 555
+  }
+ }
+}

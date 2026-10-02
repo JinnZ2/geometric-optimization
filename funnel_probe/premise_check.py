@@ -18,6 +18,19 @@ wall term has curvature ~ H/s_w^2 = 200 in theta, so h*lambda = 4 exceeds
 RK4's stability bound (~2.8) and cells near theta_w oscillate forever,
 scattering into 173 spurious "minima".  The step is reduced only where the
 stiffness is; the time horizon (up to 200 time units) is kept.
+
+NUMERICAL AMENDMENT 2 (before any C22 run; landscape constants untouched): run 2
+with amendment 1 was stopped after a 37x37 subgrid showed 73-83% of cells still
+"unconverged" at the 50000-step cap with the gradient norm at a constant 3.00e-4
+-- which is A sin(1e-3)/2, the bowl gradient AT THE THETA CLIP (pi - 1e-3): those
+cells had reached the antipode and the clip held them 1e-3 short of the pole, above
+TOL, forever.  A cell at either clip now counts as converged (`at_pole`).  The same
+subgrid showed a few cells with gradient norm ~20 at w = 0.1: the channel's psi
+curvature (D T S + H W) C / (w^2 sin^2 theta) reaches ~900 there, so h = 0.02 is unstable in
+psi exactly as h = 0.02 was in theta at the wall.  `step_size` now bounds h by
+H_LAMBDA / lambda from a per-cell curvature estimate.  Cells that remain
+unconverged after both amendments are reported with their location
+(`premise_shelf.py` reads them: a ring of equilibria inside the wall).
     minima    endpoints clustered at 0.02 rad (merged greedily at 0.03)
     volume    cell weight sin^6(theta) sin^5(psi); f(w) = weighted share whose
               descent ends at the global minimum
@@ -44,6 +57,7 @@ import channel_landscape_v2 as V2                   # noqa: E402
 
 WIDTHS = [0.1, 0.2, 0.4, 0.8, 1.6]
 NG, H_STEP, H_WALL, WALL_BAND, MAX_STEPS, TOL = 361, 0.02, 0.004, 0.3, 50000, 1e-6
+H_LAMBDA = 2.0      # RK4 stability target h * lambda <= 2 against a per-cell curvature bound (AMENDMENT 2)
 TH_MIN, TH_MAX = 1e-3, np.pi - 1e-3
 
 
@@ -67,6 +81,25 @@ def wrap(th, ps):
     return th, ps
 
 
+def step_size(t, p, w):
+    """per-cell RK4 step: the wall band step, then further reduced where the channel is stiff
+    (curvature ~ (D T S + H W) C(u) / (w^2 sin^2 theta) in psi), so that h * lambda <= H_LAMBDA."""
+    h = np.where(np.abs(t - V2.THETA_W) < WALL_BAND, H_WALL, H_STEP)
+    C = np.exp(-(1.0 - np.cos(p)) / (w * w))
+    T = np.exp(-(t - V2.THETA_M) ** 2 / (2 * V2.S_M * V2.S_M)) * (1.0 - np.exp(-t * t / (2 * V2.S_0 * V2.S_0)))
+    W = np.exp(-(t - V2.THETA_W) ** 2 / (2 * V2.S_W * V2.S_W))
+    # the psi-curvature carries the theta envelopes (D T S + H W): without them the 1/sin^2 blows
+    # the bound up at the poles where the channel term is physically absent
+    lam = (V2.D * T + V2.H * W) * C / (w * w * np.maximum(np.sin(t) ** 2, 1e-4)) + 1.0
+    return np.minimum(h, H_LAMBDA / lam)
+
+
+def at_pole(t):
+    """a cell sitting at the theta clip is at a pole of the sphere; the residual gradient there,
+    A sin(1e-3)/2 = 3.0e-4, is the clip's not the landscape's (AMENDMENT 2)."""
+    return (t >= TH_MAX - 1e-9) | (t <= TH_MIN + 1e-9)
+
+
 def descend(th, ps, w):
     th, ps = th.copy(), ps.copy()
     active = np.ones(th.shape, dtype=bool)
@@ -76,7 +109,7 @@ def descend(th, ps, w):
         if idx.size == 0:
             break
         t, p = th[idx], ps[idx]
-        h = np.where(np.abs(t - V2.THETA_W) < WALL_BAND, H_WALL, H_STEP)
+        h = step_size(t, p, w)
         k1 = flow(t, p, w)
         k2 = flow(*wrap(t + 0.5 * h * k1[0], p + 0.5 * h * k1[1]), w)
         k3 = flow(*wrap(t + 0.5 * h * k2[0], p + 0.5 * h * k2[1]), w)
@@ -87,7 +120,7 @@ def descend(th, ps, w):
         th[idx], ps[idx] = t2, p2
         steps_used[idx] = k + 1
         if k % 25 == 0:
-            done = gnorm(t2, p2, w) < TOL
+            done = (gnorm(t2, p2, w) < TOL) | at_pole(t2)
             active[idx[done]] = False
     return th, ps, active, steps_used
 
@@ -129,7 +162,7 @@ def main():
     TH, PS = np.meshgrid(th1, ps1, indexing="ij"); TH, PS = TH.ravel(), PS.ravel()
     wgt = np.sin(TH) ** 6 * np.sin(PS) ** 5
     f_h = cap_fraction_s7(V2.R_H)
-    print("premise check on the reduced landscape: %d x %d grid, RK4 h=%.2f (%.3f within %.1f of the wall), tol %.0e, cap %d steps" % (NG, NG, H_STEP, H_WALL, WALL_BAND, TOL, MAX_STEPS))
+    print("premise check on the reduced landscape: %d x %d grid, RK4 h=%.2f (%.3f within %.1f of the wall, h*lambda <= %.0f in the channel), tol %.0e or at a pole, cap %d steps" % (NG, NG, H_STEP, H_WALL, WALL_BAND, H_LAMBDA, TOL, MAX_STEPS))
     print("r_h = %.2f -> S^7 cap fraction f_h = %.3e (the RANDOM arm's comparator; Q1 as pre-registered used f(w), see docstring)" % (V2.R_H, f_h))
     print("  predicted random hit rate per run: n=600 -> %.4f ; n=2400 -> %.4f" % (1 - (1 - f_h) ** 600, 1 - (1 - f_h) ** 2400))
     results = {"f_h": f_h, "widths": {}}
