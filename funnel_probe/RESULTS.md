@@ -136,3 +136,80 @@ both arms are at zero below w = 0.4.
 The compass line stands on the C20 table: at every thin width GAS points
 away from the basin at Bonferroni. What it points at is the far side of a
 wall, not the mouth of a channel.
+
+## C21 — inverse-density sampling (PREREGISTRATION_C21.md, commit 4316fa1; registered 8dccd85; code 7c85bf8)
+
+Run: `python3 funnel_probe/experiment_c21.py run` from a temp directory,
+which is `scientific_method run --claim C21`. Log `samples/c21_run.sample.txt`,
+numbers `samples/c21_results.json`. No regression; the register reads
+SUPPORTED 14, FALSIFIED 2, UNSUPPORTED 2, UNFALSIFIABLE_HERE 2, UNTESTED 1.
+
+### What did not hold, first: all three pre-registered readings
+
+    R1  FAILED  commitment reading (inverse-density > uniform on channel hits
+                at some w <= 0.4): at w <= 0.4 both arms are at 0/32, 0/32, 0 vs 1
+    R2  FAILED  bad-luck reading (no width differs): w = 0.8 differs, p = 5.9e-3
+    R3  FAILED  the stated confound (basin criterion favours inverse density
+                at every width): it favours UNIFORM at every width, 21/30,
+                21/30, 3/30, 1/30, 1/30
+
+So C21 is SUPPORTED by its rule -- one width differs at p < 0.01 on the
+primary criterion -- and the direction is inverse-density BELOW uniform,
+which is neither reading the pre-registration offered. The same shape as
+C20: the rule asks "different from random" and the answer is "yes, worse".
+
+### The table (32 seeds per arm; B = 2000 energy evaluations per run)
+
+    w     GAS density pts   rho_0    pilot rho median   cand/accepted | channel hits inv  uni   p      | basin hits inv  uni   p
+    0.1       59151          8.79        0.64              1.54        |       0/32     0/32  1.00    |     21/32    30/32  1.1e-2
+    0.2       59151          8.79        0.64              1.54        |       0/32     0/32  1.00    |     21/32    30/32  1.1e-2
+    0.4       62052          9.53        0.65              1.54        |       0/32     1/32  1.00    |      3/32    30/32  2.8e-12
+    0.8       61290         31.5         0.44              1.28        |      22/32    31/32  5.9e-3  |      1/32    30/32  1.8e-14
+    1.6       62052         55.5         0.18              1.28        |      32/32    32/32  1.00    |      1/32    30/32  1.8e-14
+
+    w = 0.1 and 0.2 are byte-identical because GAS never reaches the channel,
+    so its width never enters the energy GAS evaluates and the trajectories
+    (hence the density, hence the sampler) are the same.
+
+### What the sampler did, mechanically
+
+The pilot median of rho (0.2-0.65) sits far below rho_0 (8.8-55), so a
+uniform candidate in a region GAS never visited is accepted with
+probability ~0.9: the sampler is uniform almost everywhere and carves OUT
+the regions where rho exceeds rho_0 -- the GAS clusters. Two things follow.
+
+    1. GAS clusters where its trajectories end. At w >= 0.8 GAS reaches the
+       basin in 15-25 of 32 runs (C20), so the basin interior IS a GAS
+       cluster and inverse density removes it: basin hits 1/32.
+    2. At w <= 0.4 GAS never enters the cap (0-1 of 32), yet basin hits still
+       fall 30 -> 21 and 30 -> 3. GAS stalls against the OUTER face of the
+       wall, and a kernel of h = 0.3 (chordal, sphere radius 1.41) smears
+       that density across a wall 0.1 wide into the cap behind it. The
+       sampler cannot tell "GAS avoids the far side" from "GAS sits on the
+       near side", because the kernel has no wall in it.
+
+The channel result is the same mechanism at w = 0.8: the channel mouth is
+where GAS trajectories pile up on their way in, so it is the densest GAS
+region and the sampler avoids it (22/32 against uniform 31/32).
+
+### Reading against the order's two branches
+
+The order offered "better than random -> the avoidance carries position
+information" and "at random -> bad luck in descent". The data return a
+third branch: WORSE than random, because the regions GAS avoids and the
+regions GAS occupies are adjacent at the scale of the kernel, and the
+density records occupancy, not avoidance. GAS's avoidance of the far side
+of the wall does carry position information -- the wall -- but inverting a
+smoothed occupancy density does not recover it, since the information is in
+the discontinuity the kernel removes. Whether a kernel narrower than the
+wall (h < s_w = 0.1) would turn this around is a different sampler and a
+new pre-registration; h = 0.3 was fixed before the run and is kept.
+
+The compass line survives one more turn: inverse-density also points
+south. What it is pointed at is still the wall.
+
+Scope: stochastic (fixed seeds), one landscape class, h = 0.3, rho_0 rule
+and budget as pre-registered, two implementation choices marked in the code
+(pilot seed 2999; candidate batch 512, speed only); the density-building
+cost (32 GAS runs x 2000 per width) excluded by declaration, so nothing
+here is a statement about total cost or about C11.

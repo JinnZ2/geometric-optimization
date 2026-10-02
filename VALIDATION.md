@@ -21,7 +21,6 @@ run it again.
 | not testable here | C17 | Conventional equation architecture operates at 0.5 sigma quality, with a 94% defect rate across economics, AI training and corporate metrics. | No dataset, sample frame, population definition, coding protocol or inter-rater procedure is given for any of the percentages. The sigma levels are computed from figures that were not measured. |
 | not testable here | C18 | Robots are 30x-100x more energy expensive than efficient human workers on a full lifecycle basis. | No citations, no lifecycle inventory, no system boundary and no source for any of the kWh/day figures. The ranges are asserted, not derived. |
 | untested | C14 | For problems whose global optimum has rho_coset > rho_min, GAS finds the global minimum with high probability. | Explicitly labelled a conjecture, which is honest. Deciding it needs a problem family with known global optima; none exists in this repository yet. |
-| untested | C21 | Sampling weighted toward regions GAS avoids finds the thin channel at a rate different from uniform random at equal budget. | Registered BEFORE any sampler code or run; build, budget, hit criteria and decision rule in funnel_probe/PREREGISTRATION_C21.md (commit 4316fa1). Density-building cost excluded by declaration. |
 | PASS | C01 | The 240 generated vectors form the E8 root system: norm^2 = 2, integral inner products, no duplicates. | 240 roots, all norm^2=2.0, inner products in [-2.0, -1.0, 0.0, 1.0, 2.0], 0 duplicates |
 | PASS | C02 | Each geometric energy term is a non-constant function of the state x. | worst term OctahedralEnergy: 300/300 distinct values over the sphere |
 | PASS | C03 | No energy term degenerates to a constant over the sphere. | narrowest range: DodecahedralEnergy spans 0.003469 |
@@ -35,6 +34,7 @@ run it again.
 | PASS | C12 | Under the GAS update rule the expected energy decreases: E[E_{t+1}] <= E_t + O(sigma_t^2). | mean one-step dE = -0.003779 over 120 states, bound sigma^2 = 0.002500; 77% of steps were non-increasing |
 | PASS | C19 | The meta-layer's geometric regularization term influences the decoded N-dimensional solution. | min \|\|grad R_geo\|\| = 3.032e-01; turning lambda_3 off moves the decoded solution by at least 7.166e-01 |
 | PASS | C20 | On a landscape whose lowest basin is reached only through a thin channel, GAS finds it at a rate different from uniform random at equal budget. | 7 of 10 cells differ at p < 0.0050 (directions: GAS<random); GAS hits by width at B=2000: [0, 0, 1, 15, 25]; random hits by width at B=2000: [30, 30, 30, 30, 30]; NO_WALL control GAS 32 vs random 30 at B=2000 |
+| PASS | C21 | Sampling weighted toward regions GAS avoids finds the thin channel at a rate different from uniform random at equal budget. | PRIMARY (channel point) 1 of 5 widths differ at p < 0.010 (directions: inv<uni); channel hits by width inverse-density [0, 0, 0, 22, 32] vs uniform [0, 0, 1, 31, 32]; SECONDARY (basin) inverse-density [21, 21, 3, 1, 1] vs uniform [30, 30, 30, 30, 30]; density-building cost (32 GAS runs x 2000 per width) excluded by declaration |
 
 ## Detail
 
@@ -112,16 +112,6 @@ run it again.
 - **Experiment:** `none available`
 - **Revision:** 1
 - **Note:** Explicitly labelled a conjecture, which is honest. Deciding it needs a problem family with known global optima; none exists in this repository yet.
-
-### C21 — untested
-
-> Sampling weighted toward regions GAS avoids finds the thin channel at a rate different from uniform random at equal budget.
-
-- **Asserted in:** funnel_probe/PREREGISTRATION_C21.md (follow-on to C20, 2026-10-02)
-- **Kind:** empirical
-- **Experiment:** `inverse_density_vs_random`
-- **Revision:** 1
-- **Note:** Registered BEFORE any sampler code or run; build, budget, hit criteria and decision rule in funnel_probe/PREREGISTRATION_C21.md (commit 4316fa1). Density-building cost excluded by declaration.
 
 ### C01 — PASS
 
@@ -275,3 +265,14 @@ run it again.
 - **Revision:** 1
 - **Measured:** 7 of 10 cells differ at p < 0.0050 (directions: GAS<random); GAS hits by width at B=2000: [0, 0, 1, 15, 25]; random hits by width at B=2000: [30, 30, 30, 30, 30]; NO_WALL control GAS 32 vs random 30 at B=2000
 - **Note:** Registered BEFORE any run; landscape, grid and decision rule in funnel_probe/PREREGISTRATION.md (commit 31d5523). C11 stays as recorded; this bears on the channel landscape class only.
+
+### C21 — PASS
+
+> Sampling weighted toward regions GAS avoids finds the thin channel at a rate different from uniform random at equal budget.
+
+- **Asserted in:** funnel_probe/PREREGISTRATION_C21.md (follow-on to C20, 2026-10-02)
+- **Kind:** empirical
+- **Experiment:** `inverse_density_vs_random`
+- **Revision:** 1
+- **Measured:** PRIMARY (channel point) 1 of 5 widths differ at p < 0.010 (directions: inv<uni); channel hits by width inverse-density [0, 0, 0, 22, 32] vs uniform [0, 0, 1, 31, 32]; SECONDARY (basin) inverse-density [21, 21, 3, 1, 1] vs uniform [30, 30, 30, 30, 30]; density-building cost (32 GAS runs x 2000 per width) excluded by declaration
+- **Note:** Registered BEFORE any sampler code or run; build, budget, hit criteria and decision rule in funnel_probe/PREREGISTRATION_C21.md (commit 4316fa1). Density-building cost excluded by declaration.

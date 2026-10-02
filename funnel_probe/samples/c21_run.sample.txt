@@ -1,0 +1,17 @@
+
+  C21 grid (PREREGISTRATION_C21.md): widths [0.1, 0.2, 0.4, 0.8, 1.6], B=2000 accepted samples, 32 seeds, h=0.30
+  w=0.1  density pts  59151  rho0 8.79  cand/acc 1.54 | channel inv  0/32 uni  0/32 p=1.00e+00 | basin inv 21/32 uni 30/32 p=1.09e-02 | inner-cap share inv 0.013 uni 0.018
+  w=0.2  density pts  59151  rho0 8.79  cand/acc 1.54 | channel inv  0/32 uni  0/32 p=1.00e+00 | basin inv 21/32 uni 30/32 p=1.09e-02 | inner-cap share inv 0.013 uni 0.018
+  w=0.4  density pts  62052  rho0 9.53  cand/acc 1.54 | channel inv  0/32 uni  1/32 p=1.00e+00 | basin inv  3/32 uni 30/32 p=2.79e-12 | inner-cap share inv 0.009 uni 0.018
+  w=0.8  density pts  61290  rho0 31.5  cand/acc 1.28 | channel inv 22/32 uni 31/32 p=5.90e-03 | basin inv  1/32 uni 30/32 p=1.79e-14 | inner-cap share inv 0.005 uni 0.018
+  w=1.6  density pts  62052  rho0 55.5  cand/acc 1.28 | channel inv 32/32 uni 32/32 p=1.00e+00 | basin inv  1/32 uni 30/32 p=1.79e-14 | inner-cap share inv 0.005 uni 0.018
+  FAILED R1 commitment reading: inverse-density > uniform on channel hits at some w <= 0.4 (p<0.01)
+  FAILED R2 bad-luck reading: no width differs at p < 0.01 on channel hits
+  FAILED R3 basin criterion favours inverse density at every width (the stated confound)
+  C21  [PASS ] PRIMARY (channel point) 1 of 5 widths differ at p < 0.010 (directions: inv<uni); channel hits by width inverse-density [0, 0, 0, 22, 32] vs uniform [0, 0, 1, 31, 32]; SECONDARY (basin) inverse-density [21, 21, 3, 1, 1] vs uniform [30, 30, 30, 30, 30]; density-building cost (32 GAS runs x 2000 per width) excluded by declaration
+
+  FALSIFIED            2
+  UNSUPPORTED          2
+  UNFALSIFIABLE_HERE   2
+  UNTESTED             1
+  SUPPORTED            14
