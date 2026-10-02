@@ -3,7 +3,7 @@
 **A novel optimization framework that replaces linear cost functions with
 geometric coherence principles derived from the E8 root lattice.**
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](LICENSE)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
 ## Project Status: Research Prototype
@@ -242,7 +242,7 @@ written so that it fails against the code in `legacy/`.
 
 ## License
 
-Apache 2.0 -- Use freely, modify freely, attribute openly.
+CC0-1.0 -- Use freely, modify freely, attribute openly.
 See [LICENSE](LICENSE) for details.
 
 ## Contributing
