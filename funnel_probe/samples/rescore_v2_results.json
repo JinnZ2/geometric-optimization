@@ -1,0 +1,18 @@
+{
+ "widths": [
+  1.6,
+  0.8,
+  0.4,
+  0.2,
+  0.1
+ ],
+ "hits": [
+  25,
+  15,
+  1,
+  0,
+  0
+ ],
+ "outcome_thinnest": "FUNNEL_FOUND, qualifier `start-selectivity NOT_EVALUABLE`",
+ "prediction_held": true
+}

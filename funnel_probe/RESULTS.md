@@ -213,3 +213,26 @@ and budget as pre-registered, two implementation choices marked in the code
 (pilot seed 2999; candidate batch 512, speed only); the density-building
 cost (32 GAS runs x 2000 per width) excluded by declaration, so nothing
 here is a statement about total cost or about C11.
+
+## Re-scored under RULES V2 (noise band + thinness; `RULES_V2.md`, `rescore_v2.py`, nothing re-run)
+
+Output `samples/rescore_v2.sample.txt`, numbers `samples/rescore_v2_results.json`.
+
+    RULES V2 re-scoring -- GO C20, GAS success set per width at B=2000 (32 seeds = 32 starts, one seed each), widths [1.6, 0.8, 0.4, 0.2, 0.1]
+      Rule N on GAS hits (predicted non-increasing as w falls): ['25', '15', '1', '0', '0']
+         step 0: change -10  band +-7.459  ok
+         step 1: change -14  band +-6.167  ok
+         step 2: change -1  band +-1.918  ok
+         step 3: change +0  band +-0  ok
+      thinnest width with a non-empty success set: w = 0.4, share 0.031 -> T1 True ; T2 NOT_EVALUABLE (starts are random seeds, not enumerated)
+      V2 OUTCOME at w = 0.4: FUNNEL_FOUND, qualifier `start-selectivity NOT_EVALUABLE`
+      V2 OUTCOME at w = 0.2: NOT_FOUND_IN_RANGE (success set empty, nothing persists)
+      V2 OUTCOME at w = 0.1: NOT_FOUND_IN_RANGE (success set empty, nothing persists)
+      RULES_V2 prediction for GO (FUNNEL_FOUND at w = 0.4 ONLY with the qualifier; NOT_FOUND at w <= 0.2): HELD
+
+What V2 changes here: C20's FUNNEL_FOUND narrows to w = 0.4 only (1 of 32
+success, thin by T1) with T2 NOT_EVALUABLE because each start is one random
+seed; at w <= 0.2 the success set is empty and nothing persists, so those
+widths read NOT_FOUND_IN_RANGE. Rule N finds the width curve monotone. The
+re-scoring prediction HELD. C22 (verified-thin landscape) is the
+construction under which T2 could be made evaluable, by enumerating starts.
