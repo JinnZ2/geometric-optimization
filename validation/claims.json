@@ -363,6 +363,19 @@
       "revision": 1,
       "note": "With revision-1 energy terms the R_geo gradient measured ~3e-11, so lambda_3 was inert and the 'geometric coherence' regularizer did nothing.",
       "history": []
+    },
+    {
+      "id": "C20",
+      "statement": "On a landscape whose lowest basin is reached only through a thin channel, GAS finds it at a rate different from uniform random at equal budget.",
+      "source": "funnel_probe/PREREGISTRATION.md (singular-funnel work order, 2026-10-01)",
+      "kind": "empirical",
+      "experiment": "thin_channel_vs_random",
+      "status": "UNTESTED",
+      "evidence": "",
+      "measurements": {},
+      "revision": 1,
+      "note": "Registered BEFORE any run; landscape, grid and decision rule in funnel_probe/PREREGISTRATION.md (commit 31d5523). C11 stays as recorded; this bears on the channel landscape class only.",
+      "history": []
     }
   ]
 }

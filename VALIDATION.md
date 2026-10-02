@@ -21,6 +21,7 @@ run it again.
 | not testable here | C17 | Conventional equation architecture operates at 0.5 sigma quality, with a 94% defect rate across economics, AI training and corporate metrics. | No dataset, sample frame, population definition, coding protocol or inter-rater procedure is given for any of the percentages. The sigma levels are computed from figures that were not measured. |
 | not testable here | C18 | Robots are 30x-100x more energy expensive than efficient human workers on a full lifecycle basis. | No citations, no lifecycle inventory, no system boundary and no source for any of the kWh/day figures. The ranges are asserted, not derived. |
 | untested | C14 | For problems whose global optimum has rho_coset > rho_min, GAS finds the global minimum with high probability. | Explicitly labelled a conjecture, which is honest. Deciding it needs a problem family with known global optima; none exists in this repository yet. |
+| untested | C20 | On a landscape whose lowest basin is reached only through a thin channel, GAS finds it at a rate different from uniform random at equal budget. | Registered BEFORE any run; landscape, grid and decision rule in funnel_probe/PREREGISTRATION.md (commit 31d5523). C11 stays as recorded; this bears on the channel landscape class only. |
 | PASS | C01 | The 240 generated vectors form the E8 root system: norm^2 = 2, integral inner products, no duplicates. | 240 roots, all norm^2=2.0, inner products in [-2.0, -1.0, 0.0, 1.0, 2.0], 0 duplicates |
 | PASS | C02 | Each geometric energy term is a non-constant function of the state x. | worst term OctahedralEnergy: 300/300 distinct values over the sphere |
 | PASS | C03 | No energy term degenerates to a constant over the sphere. | narrowest range: DodecahedralEnergy spans 0.003469 |
@@ -110,6 +111,16 @@ run it again.
 - **Experiment:** `none available`
 - **Revision:** 1
 - **Note:** Explicitly labelled a conjecture, which is honest. Deciding it needs a problem family with known global optima; none exists in this repository yet.
+
+### C20 — untested
+
+> On a landscape whose lowest basin is reached only through a thin channel, GAS finds it at a rate different from uniform random at equal budget.
+
+- **Asserted in:** funnel_probe/PREREGISTRATION.md (singular-funnel work order, 2026-10-01)
+- **Kind:** empirical
+- **Experiment:** `thin_channel_vs_random`
+- **Revision:** 1
+- **Note:** Registered BEFORE any run; landscape, grid and decision rule in funnel_probe/PREREGISTRATION.md (commit 31d5523). C11 stays as recorded; this bears on the channel landscape class only.
 
 ### C01 — PASS
 
