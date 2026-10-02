@@ -7,8 +7,17 @@ landscape depending on x_hat through (theta, psi) alone (asserted by the
 module selftest).  Runs BEFORE any GAS or random run; nothing is tuned here.
 
     grid      theta in linspace(0.005, pi-0.005, 361), psi in linspace(0, pi, 361)
-    flow      theta' = -dE/dtheta, psi' = -(1/sin^2 theta) dE/dpsi, RK4 step 0.02,
-              until the metric gradient norm < 1e-6 or 10000 steps
+    flow      theta' = -dE/dtheta, psi' = -(1/sin^2 theta) dE/dpsi, RK4 with a
+              per-cell step: 0.02 away from the wall, 0.004 within 0.3 rad of
+              theta_w (NUMERICAL AMENDMENT, see below), until the metric gradient
+              norm < 1e-6 or 50000 steps
+
+NUMERICAL AMENDMENT (before any C22 run; landscape constants untouched): the
+first run used h = 0.02 everywhere and 78% of cells never converged -- the
+wall term has curvature ~ H/s_w^2 = 200 in theta, so h*lambda = 4 exceeds
+RK4's stability bound (~2.8) and cells near theta_w oscillate forever,
+scattering into 173 spurious "minima".  The step is reduced only where the
+stiffness is; the time horizon (up to 200 time units) is kept.
     minima    endpoints clustered at 0.02 rad (merged greedily at 0.03)
     volume    cell weight sin^6(theta) sin^5(psi); f(w) = weighted share whose
               descent ends at the global minimum
@@ -34,7 +43,7 @@ from scipy.integrate import quad                    # noqa: E402
 import channel_landscape_v2 as V2                   # noqa: E402
 
 WIDTHS = [0.1, 0.2, 0.4, 0.8, 1.6]
-NG, H_STEP, MAX_STEPS, TOL = 361, 0.02, 10000, 1e-6
+NG, H_STEP, H_WALL, WALL_BAND, MAX_STEPS, TOL = 361, 0.02, 0.004, 0.3, 50000, 1e-6
 TH_MIN, TH_MAX = 1e-3, np.pi - 1e-3
 
 
@@ -67,12 +76,13 @@ def descend(th, ps, w):
         if idx.size == 0:
             break
         t, p = th[idx], ps[idx]
+        h = np.where(np.abs(t - V2.THETA_W) < WALL_BAND, H_WALL, H_STEP)
         k1 = flow(t, p, w)
-        k2 = flow(*wrap(t + 0.5 * H_STEP * k1[0], p + 0.5 * H_STEP * k1[1]), w)
-        k3 = flow(*wrap(t + 0.5 * H_STEP * k2[0], p + 0.5 * H_STEP * k2[1]), w)
-        k4 = flow(*wrap(t + H_STEP * k3[0], p + H_STEP * k3[1]), w)
-        t2 = t + H_STEP / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
-        p2 = p + H_STEP / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
+        k2 = flow(*wrap(t + 0.5 * h * k1[0], p + 0.5 * h * k1[1]), w)
+        k3 = flow(*wrap(t + 0.5 * h * k2[0], p + 0.5 * h * k2[1]), w)
+        k4 = flow(*wrap(t + h * k3[0], p + h * k3[1]), w)
+        t2 = t + h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
+        p2 = p + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
         t2, p2 = wrap(t2, p2)
         th[idx], ps[idx] = t2, p2
         steps_used[idx] = k + 1
@@ -119,7 +129,7 @@ def main():
     TH, PS = np.meshgrid(th1, ps1, indexing="ij"); TH, PS = TH.ravel(), PS.ravel()
     wgt = np.sin(TH) ** 6 * np.sin(PS) ** 5
     f_h = cap_fraction_s7(V2.R_H)
-    print("premise check on the reduced landscape: %d x %d grid, RK4 h=%.2f, tol %.0e, cap %d steps" % (NG, NG, H_STEP, TOL, MAX_STEPS))
+    print("premise check on the reduced landscape: %d x %d grid, RK4 h=%.2f (%.3f within %.1f of the wall), tol %.0e, cap %d steps" % (NG, NG, H_STEP, H_WALL, WALL_BAND, TOL, MAX_STEPS))
     print("r_h = %.2f -> S^7 cap fraction f_h = %.3e (the RANDOM arm's comparator; Q1 as pre-registered used f(w), see docstring)" % (V2.R_H, f_h))
     print("  predicted random hit rate per run: n=600 -> %.4f ; n=2400 -> %.4f" % (1 - (1 - f_h) ** 600, 1 - (1 - f_h) ** 2400))
     results = {"f_h": f_h, "widths": {}}
