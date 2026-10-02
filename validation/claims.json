@@ -415,6 +415,19 @@
       "revision": 1,
       "note": "Registered BEFORE any run; landscape, grid and decision rule in funnel_probe/PREREGISTRATION.md (commit 31d5523). C11 stays as recorded; this bears on the channel landscape class only.",
       "history": []
+    },
+    {
+      "id": "C21",
+      "statement": "Sampling weighted toward regions GAS avoids finds the thin channel at a rate different from uniform random at equal budget.",
+      "source": "funnel_probe/PREREGISTRATION_C21.md (follow-on to C20, 2026-10-02)",
+      "kind": "empirical",
+      "experiment": "inverse_density_vs_random",
+      "status": "UNTESTED",
+      "evidence": "",
+      "measurements": {},
+      "revision": 1,
+      "note": "Registered BEFORE any sampler code or run; build, budget, hit criteria and decision rule in funnel_probe/PREREGISTRATION_C21.md (commit 4316fa1). Density-building cost excluded by declaration.",
+      "history": []
     }
   ]
 }
