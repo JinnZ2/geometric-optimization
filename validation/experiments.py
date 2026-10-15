@@ -213,7 +213,7 @@ def exp_gradients_match_finite_difference() -> Verdict:
                 a[i] += eps
                 b[i] -= eps
                 gn[i] = (t.compute(a, nb) - t.compute(b, nb)) / (2 * eps)
-            rel = np.linalg.norm(ga - gn) / max(np.linalg.norm(gn), 1e-12)
+            rel = np.linalg.norm(ga - gn) / max(float(np.linalg.norm(gn)), 1e-12)
             if rel > worst:
                 worst, name = float(rel), cls.__name__
     ok = worst < 1e-5

@@ -1,3 +1,6 @@
+> Before reading or editing anything here, read READ_ME_THIS_WAY.md.
+> Mismatches, dead ends and odd names in this repo are kept on purpose.
+
 # Geometric Optimization via E8 Lattice Structure
 
 **A novel optimization framework that replaces linear cost functions with
