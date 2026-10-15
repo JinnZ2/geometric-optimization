@@ -24,7 +24,7 @@ run it again.
 | PASS | C01 | The 240 generated vectors form the E8 root system: norm^2 = 2, integral inner products, no duplicates. | 240 roots, all norm^2=2.0, inner products in [-2.0, -1.0, 0.0, 1.0, 2.0], 0 duplicates |
 | PASS | C02 | Each geometric energy term is a non-constant function of the state x. | worst term OctahedralEnergy: 300/300 distinct values over the sphere |
 | PASS | C03 | No energy term degenerates to a constant over the sphere. | narrowest range: DodecahedralEnergy spans 0.003469 |
-| PASS | C04 | Analytic gradients agree with central finite differences to better than 1e-5 relative error. | worst relative error 3.655e-09 (DodecahedralEnergy), tolerance 1e-5 |
+| PASS | C04 | Analytic gradients agree with central finite differences to better than 1e-5 relative error. | worst relative error 3.176e-09 (DodecahedralEnergy), tolerance 1e-5 |
 | PASS | C05 | Every energy term has a nonzero gradient with respect to x. | smallest gradient norm across all terms and samples: 9.661e-03 (HexagonalEnergy) |
 | PASS | C06 | The recorded energy changes over the course of an optimization run. | 273 distinct energies over 301 iterations |
 | PASS | C07 | GAS reduces the geometric energy below its starting value. | mean improvement 14.1% over 8 seeds, worst 6.3% |
@@ -155,8 +155,8 @@ run it again.
 - **Kind:** empirical
 - **Experiment:** `gradients_match_finite_difference`
 - **Revision:** 1
-- **Measured:** worst relative error 3.655e-09 (DodecahedralEnergy), tolerance 1e-5
-- **Note:** Standard code verification. Revision 1 had no analytic gradient to check.
+- **Measured:** worst relative error 3.176e-09 (DodecahedralEnergy), tolerance 1e-5
+- **Note:** Standard code verification. Revision 1 had no analytic gradient to check. Note 2026-10-15: previously recorded 3.655e-09 / 4e-09; regenerated on Actions as 3.176e-09 / 3e-09; owner accepted the new values. The difference is kept as a reproducibility specimen (platform float variance at ~1e-9).
 
 ### C05 — PASS
 

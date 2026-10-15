@@ -80,12 +80,12 @@
       "kind": "empirical",
       "experiment": "gradients_match_finite_difference",
       "status": "SUPPORTED",
-      "evidence": "worst relative error 3.655e-09 (DodecahedralEnergy), tolerance 1e-5",
+      "evidence": "worst relative error 3.176e-09 (DodecahedralEnergy), tolerance 1e-5",
       "measurements": {
-        "max_rel_error": 4e-09
+        "max_rel_error": 3e-09
       },
       "revision": 1,
-      "note": "Standard code verification. Revision 1 had no analytic gradient to check.",
+      "note": "Standard code verification. Revision 1 had no analytic gradient to check. Note 2026-10-15: previously recorded 3.655e-09 / 4e-09; regenerated on Actions as 3.176e-09 / 3e-09; owner accepted the new values. The difference is kept as a reproducibility specimen (platform float variance at ~1e-9).",
       "history": []
     },
     {
