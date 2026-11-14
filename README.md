@@ -1,3 +1,6 @@
+> Read first: [READING_PROTOCOL.md](READING_PROTOCOL.md) (how to read this repo).
+> Map, not prescription. Errors are data. Check it. Built for the need, revisable.
+
 # Geometric Optimization via E8 Lattice Structure
 
 **A novel optimization framework that replaces linear cost functions with
