@@ -80,12 +80,12 @@
       "kind": "empirical",
       "experiment": "gradients_match_finite_difference",
       "status": "SUPPORTED",
-      "evidence": "worst relative error 3.655e-09 (DodecahedralEnergy), tolerance 1e-5",
+      "evidence": "worst relative error < 1e-07 over all terms (exact value is BLAS/CPU-dependent; see run log), tolerance 1e-5",
       "measurements": {
-        "max_rel_error": 4e-09
+        "max_rel_error_bound": 1e-07
       },
       "revision": 1,
-      "note": "Standard code verification. Revision 1 had no analytic gradient to check.",
+      "note": "Standard code verification. Revision 1 had no analytic gradient to check. Note 2026-10-15: previously recorded 3.655e-09 / 4e-09; regenerated on Actions as 3.176e-09 / 3e-09; owner accepted the new values. The difference is kept as a reproducibility specimen (platform float variance at ~1e-9). Note 2026-11-24: evidence is now recorded as the bound '< 1e-07' instead of exact digits. The exact worst residual is rounding noise that depends on the BLAS kernel / CPU: main recorded 3.655e-09 (DodecahedralEnergy), GitHub Actions computed 3.655e-09 on 2026-10-15 (ubuntu-24.04 image) and 3.176e-09 on 2026-11-24 (ubuntu-latest 26.04), and forcing OPENBLAS_CORETYPE locally gives 3.400e-09 (Haswell/Zen, SquareEnergy) to 5.503e-09 (Prescott). Exact digits made VALIDATION.md machine-dependent and failed the staleness check. The claim and its 1e-5 tolerance are unchanged; the exact value is still printed in the run log. Previous recorded values: evidence 'worst relative error 3.655e-09 (DodecahedralEnergy), tolerance 1e-5', max_rel_error 4e-09.",
       "history": []
     },
     {

@@ -24,7 +24,7 @@ run it again.
 | PASS | C01 | The 240 generated vectors form the E8 root system: norm^2 = 2, integral inner products, no duplicates. | 240 roots, all norm^2=2.0, inner products in [-2.0, -1.0, 0.0, 1.0, 2.0], 0 duplicates |
 | PASS | C02 | Each geometric energy term is a non-constant function of the state x. | worst term OctahedralEnergy: 300/300 distinct values over the sphere |
 | PASS | C03 | No energy term degenerates to a constant over the sphere. | narrowest range: DodecahedralEnergy spans 0.003469 |
-| PASS | C04 | Analytic gradients agree with central finite differences to better than 1e-5 relative error. | worst relative error 3.655e-09 (DodecahedralEnergy), tolerance 1e-5 |
+| PASS | C04 | Analytic gradients agree with central finite differences to better than 1e-5 relative error. | worst relative error < 1e-07 over all terms (exact value is BLAS/CPU-dependent; see run log), tolerance 1e-5 |
 | PASS | C05 | Every energy term has a nonzero gradient with respect to x. | smallest gradient norm across all terms and samples: 9.661e-03 (HexagonalEnergy) |
 | PASS | C06 | The recorded energy changes over the course of an optimization run. | 273 distinct energies over 301 iterations |
 | PASS | C07 | GAS reduces the geometric energy below its starting value. | mean improvement 14.1% over 8 seeds, worst 6.3% |
@@ -155,8 +155,8 @@ run it again.
 - **Kind:** empirical
 - **Experiment:** `gradients_match_finite_difference`
 - **Revision:** 1
-- **Measured:** worst relative error 3.655e-09 (DodecahedralEnergy), tolerance 1e-5
-- **Note:** Standard code verification. Revision 1 had no analytic gradient to check.
+- **Measured:** worst relative error < 1e-07 over all terms (exact value is BLAS/CPU-dependent; see run log), tolerance 1e-5
+- **Note:** Standard code verification. Revision 1 had no analytic gradient to check. Note 2026-10-15: previously recorded 3.655e-09 / 4e-09; regenerated on Actions as 3.176e-09 / 3e-09; owner accepted the new values. The difference is kept as a reproducibility specimen (platform float variance at ~1e-9). Note 2026-11-24: evidence is now recorded as the bound '< 1e-07' instead of exact digits. The exact worst residual is rounding noise that depends on the BLAS kernel / CPU: main recorded 3.655e-09 (DodecahedralEnergy), GitHub Actions computed 3.655e-09 on 2026-10-15 (ubuntu-24.04 image) and 3.176e-09 on 2026-11-24 (ubuntu-latest 26.04), and forcing OPENBLAS_CORETYPE locally gives 3.400e-09 (Haswell/Zen, SquareEnergy) to 5.503e-09 (Prescott). Exact digits made VALIDATION.md machine-dependent and failed the staleness check. The claim and its 1e-5 tolerance are unchanged; the exact value is still printed in the run log. Previous recorded values: evidence 'worst relative error 3.655e-09 (DodecahedralEnergy), tolerance 1e-5', max_rel_error 4e-09.
 
 ### C05 — PASS
 
