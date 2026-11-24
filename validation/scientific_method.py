@@ -114,6 +114,8 @@ def cmd_run(args) -> int:
 
         mark = "PASS " if verdict.supported else "FALSE"
         print(f"  {claim['id']}  [{mark}] {verdict.measured}")
+        if verdict.detail:
+            print(f"        ({verdict.detail}; not recorded)")
 
     save(registry)
     write_report(registry)
