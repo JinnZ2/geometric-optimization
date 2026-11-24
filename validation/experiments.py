@@ -46,11 +46,15 @@ class Verdict:
         supported: True if the claim survived the attempt to falsify it.
         measured: Human-readable summary of what was actually observed.
         data: Machine-readable measurements, recorded for later comparison.
+        detail: Machine-specific diagnostics printed by the harness but not
+            recorded in claims.json / VALIDATION.md (e.g. an exact value that
+            varies with BLAS kernel / CPU while the recorded result does not).
     """
 
     supported: bool
     measured: str
     data: Dict[str, float] = field(default_factory=dict)
+    detail: str = ""
 
 
 REGISTRY: Dict[str, Callable[[], Verdict]] = {}
@@ -191,6 +195,18 @@ def exp_gradients_nonzero() -> Verdict:
     )
 
 
+# Recorded upper bound for C04's finite-difference residual. The exact worst
+# relative error is rounding noise at ~1e-9 whose digits (and which term is
+# worst) depend on the BLAS kernel / CPU: observed 3.176e-09 to 5.503e-09
+# across runners and OPENBLAS_CORETYPE settings (2026-11-24). Recording the
+# exact digits made VALIDATION.md machine-dependent, so the record states this
+# bound instead: ~18x above the largest observed value, 100x inside the 1e-5
+# tolerance. The exact value is still printed in the run log (Verdict.detail).
+# If the residual ever reaches the bound, the exact value is recorded instead,
+# so the change shows up in the VALIDATION.md staleness check.
+FD_RESIDUAL_BOUND = 1e-7
+
+
 @experiment("gradients_match_finite_difference")
 def exp_gradients_match_finite_difference() -> Verdict:
     """Analytic gradients agree with central finite differences.
@@ -198,6 +214,10 @@ def exp_gradients_match_finite_difference() -> Verdict:
     Standard code verification: the implemented derivative must match the
     derivative of the implemented energy. Revision 1 had no analytic gradient
     to check.
+
+    The pass/fail decision uses the exact residual against the 1e-5
+    tolerance. Only the recorded evidence is reported as a bound
+    (``FD_RESIDUAL_BOUND``), because the exact digits are platform-dependent.
     """
     L = lattice()
     pts = sphere_points(5, seed=3)
@@ -217,10 +237,20 @@ def exp_gradients_match_finite_difference() -> Verdict:
             if rel > worst:
                 worst, name = float(rel), cls.__name__
     ok = worst < 1e-5
+    exact = f"worst relative error {worst:.3e} ({name})"
+    if worst < FD_RESIDUAL_BOUND:
+        return Verdict(
+            ok,
+            f"worst relative error < {FD_RESIDUAL_BOUND:.0e} over all terms "
+            f"(exact value is BLAS/CPU-dependent; see run log), tolerance 1e-5",
+            {"max_rel_error_bound": FD_RESIDUAL_BOUND},
+            detail=f"{exact} on this machine",
+        )
     return Verdict(
         ok,
-        f"worst relative error {worst:.3e} ({name}), tolerance 1e-5",
+        f"{exact}, tolerance 1e-5 (exceeds recorded bound {FD_RESIDUAL_BOUND:.0e})",
         {"max_rel_error": worst},
+        detail=f"{exact} on this machine",
     )
 
 
